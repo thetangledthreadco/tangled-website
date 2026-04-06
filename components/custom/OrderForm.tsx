@@ -35,14 +35,19 @@ export default function OrderForm() {
     setFormData((prev) => ({ ...prev, ...data }));
   };
 
-  const next = () => setStep((s) => Math.min(s + 1, 7));
-  const back = () => setStep((s) => Math.max(s - 1, 1));
+  const next = () => { setStep((s) => Math.min(s + 1, 7)); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const back = () => { setStep((s) => Math.max(s - 1, 1)); window.scrollTo({ top: 0, behavior: "smooth" }); };
 
   const handleSubmit = async () => {
     setSubmitting(true);
     setSubmitError("");
     try {
-      await sendOrderEmail(formData);
+      let imageBase64: string | null = null;
+      if (formData.referenceImageFile) {
+        const buffer = await formData.referenceImageFile.arrayBuffer();
+        imageBase64 = Buffer.from(buffer).toString("base64");
+      }
+      await sendOrderEmail(formData, imageBase64);
       setSubmitted(true);
     } catch {
       setSubmitError("Something went wrong submitting your order. Please try again or DM me on Instagram.");

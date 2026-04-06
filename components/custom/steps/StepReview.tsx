@@ -82,7 +82,7 @@ export default function StepReview({ formData, onSubmit, onBack, submitting, sub
           label="Delivery"
           value={
             formData.delivery === "shipping"
-              ? `Ship to me (zip: ${formData.zipCode})`
+              ? `Ship to ${formData.shippingAddress}, ${formData.shippingCity}, ${formData.shippingState} ${formData.shippingZip}`
               : "Local pickup - Spokane, WA"
           }
         />
@@ -95,11 +95,21 @@ export default function StepReview({ formData, onSubmit, onBack, submitting, sub
         <Row label="Name" value={`${formData.firstName} ${formData.lastName}`} />
         <Row label="Email" value={formData.email} />
         <Row label="Phone" value={formData.phone} />
+        <Row
+          label="Preferred contact"
+          value={
+            formData.preferredContact === "instagram"
+              ? `Instagram DM (@${formData.instagramHandle})`
+              : formData.preferredContact === "email"
+              ? "Email"
+              : "Phone"
+          }
+        />
       </div>
 
       <div className="bg-rose/5 border border-rose/20 rounded p-4 mb-8">
         <p className="font-sans text-sm text-brown leading-relaxed">
-          <strong>What happens next:</strong> I&apos;ll review your order and reach out
+          <strong>What happens next:</strong>{" "}I&apos;ll review your order and reach out
           within 1–2 business days to confirm details, finalize pricing, and send a 50%
           deposit invoice. Work begins once the deposit is received. Final payment is due
           before pickup or shipping.

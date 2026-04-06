@@ -17,12 +17,12 @@ export default function StepDelivery({
   onBack,
 }: StepDeliveryProps) {
   const [error, setError] = useState("");
-  const [zipError, setZipError] = useState("");
+  const [addressErrors, setAddressErrors] = useState<Record<string, string>>({});
 
   const handleSelect = (method: DeliveryMethod) => {
-    onChange({ delivery: method, zipCode: "" });
+    onChange({ delivery: method, shippingAddress: "", shippingCity: "", shippingState: "", shippingZip: "" });
     setError("");
-    setZipError("");
+    setAddressErrors({});
   };
 
   const handleNext = () => {
@@ -30,12 +30,19 @@ export default function StepDelivery({
       setError("Please choose a delivery method.");
       return;
     }
-    if (formData.delivery === "shipping" && !formData.zipCode.trim()) {
-      setZipError("Please enter your zip code so I can confirm shipping cost.");
-      return;
+    if (formData.delivery === "shipping") {
+      const errs: Record<string, string> = {};
+      if (!formData.shippingAddress.trim()) errs.shippingAddress = "Street address is required.";
+      if (!formData.shippingCity.trim()) errs.shippingCity = "City is required.";
+      if (!formData.shippingState.trim()) errs.shippingState = "State is required.";
+      if (!formData.shippingZip.trim()) errs.shippingZip = "Zip code is required.";
+      if (Object.keys(errs).length > 0) {
+        setAddressErrors(errs);
+        return;
+      }
     }
     setError("");
-    setZipError("");
+    setAddressErrors({});
     onNext();
   };
 
@@ -90,36 +97,70 @@ export default function StepDelivery({
 
       {error && <p className="font-sans text-xs text-rose mb-4">{error}</p>}
 
-      {/* Zip code - only shown when shipping selected */}
+      {/* Shipping address - only shown when shipping selected */}
       {formData.delivery === "shipping" && (
-        <div className="mt-4 mb-2">
-          <label
-            htmlFor="zipCode"
-            className="block font-sans text-sm font-medium text-ink mb-2"
-          >
-            Your zip code <span className="text-rose">*</span>
-          </label>
-          <input
-            id="zipCode"
-            type="text"
-            inputMode="numeric"
-            maxLength={10}
-            value={formData.zipCode}
-            onChange={(e) => {
-              onChange({ zipCode: e.target.value });
-              setZipError("");
-            }}
-            placeholder="e.g. 99201"
-            className={`
-              w-full max-w-xs px-4 py-3 rounded border bg-warm-white font-sans text-base text-ink
-              placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-rose/30 transition-colors
-              ${zipError ? "border-rose" : "border-border focus:border-rose/50"}
-            `}
-          />
-          {zipError && <p className="font-sans text-xs text-rose mt-1.5">{zipError}</p>}
-          <p className="font-sans text-xs text-muted mt-1.5">
-            Used to confirm your shipping rate. No full address needed yet.
-          </p>
+        <div className="mt-4 mb-2 space-y-4">
+          <div>
+            <label htmlFor="shippingAddress" className="block font-sans text-sm font-medium text-ink mb-2">
+              Street address <span className="text-rose">*</span>
+            </label>
+            <input
+              id="shippingAddress"
+              type="text"
+              value={formData.shippingAddress}
+              onChange={(e) => { onChange({ shippingAddress: e.target.value }); setAddressErrors((p) => ({ ...p, shippingAddress: "" })); }}
+              placeholder="123 Main St"
+              className={`w-full px-4 py-3 rounded border bg-warm-white font-sans text-base text-ink placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-rose/30 transition-colors ${addressErrors.shippingAddress ? "border-rose" : "border-border focus:border-rose/50"}`}
+            />
+            {addressErrors.shippingAddress && <p className="font-sans text-xs text-rose mt-1.5">{addressErrors.shippingAddress}</p>}
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="shippingCity" className="block font-sans text-sm font-medium text-ink mb-2">
+                City <span className="text-rose">*</span>
+              </label>
+              <input
+                id="shippingCity"
+                type="text"
+                value={formData.shippingCity}
+                onChange={(e) => { onChange({ shippingCity: e.target.value }); setAddressErrors((p) => ({ ...p, shippingCity: "" })); }}
+                placeholder="Spokane"
+                className={`w-full px-4 py-3 rounded border bg-warm-white font-sans text-base text-ink placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-rose/30 transition-colors ${addressErrors.shippingCity ? "border-rose" : "border-border focus:border-rose/50"}`}
+              />
+              {addressErrors.shippingCity && <p className="font-sans text-xs text-rose mt-1.5">{addressErrors.shippingCity}</p>}
+            </div>
+            <div>
+              <label htmlFor="shippingState" className="block font-sans text-sm font-medium text-ink mb-2">
+                State <span className="text-rose">*</span>
+              </label>
+              <input
+                id="shippingState"
+                type="text"
+                maxLength={2}
+                value={formData.shippingState}
+                onChange={(e) => { onChange({ shippingState: e.target.value.toUpperCase() }); setAddressErrors((p) => ({ ...p, shippingState: "" })); }}
+                placeholder="WA"
+                className={`w-full px-4 py-3 rounded border bg-warm-white font-sans text-base text-ink placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-rose/30 transition-colors ${addressErrors.shippingState ? "border-rose" : "border-border focus:border-rose/50"}`}
+              />
+              {addressErrors.shippingState && <p className="font-sans text-xs text-rose mt-1.5">{addressErrors.shippingState}</p>}
+            </div>
+          </div>
+          <div>
+            <label htmlFor="shippingZip" className="block font-sans text-sm font-medium text-ink mb-2">
+              Zip code <span className="text-rose">*</span>
+            </label>
+            <input
+              id="shippingZip"
+              type="text"
+              inputMode="numeric"
+              maxLength={10}
+              value={formData.shippingZip}
+              onChange={(e) => { onChange({ shippingZip: e.target.value }); setAddressErrors((p) => ({ ...p, shippingZip: "" })); }}
+              placeholder="99201"
+              className={`w-full max-w-xs px-4 py-3 rounded border bg-warm-white font-sans text-base text-ink placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-rose/30 transition-colors ${addressErrors.shippingZip ? "border-rose" : "border-border focus:border-rose/50"}`}
+            />
+            {addressErrors.shippingZip && <p className="font-sans text-xs text-rose mt-1.5">{addressErrors.shippingZip}</p>}
+          </div>
         </div>
       )}
 

@@ -39,15 +39,20 @@ function formatOrder(formData: OrderFormData): string {
     formData.itemColor ? `Sweater color: ${formData.itemColor}` : null,
     formData.referenceImageName ? `Reference image: ${formData.referenceImageName}` : null,
     formData.notes ? `Notes: ${formData.notes}` : null,
-    `Delivery: ${formData.delivery === "shipping" ? `Ship to zip ${formData.zipCode}` : "Local pickup - Spokane, WA"}`,
+    `Delivery: ${formData.delivery === "shipping" ? `Ship to ${formData.shippingAddress}, ${formData.shippingCity}, ${formData.shippingState} ${formData.shippingZip}` : "Local pickup - Spokane, WA"}`,
   ].filter(Boolean);
 
   return lines.join("\n");
 }
 
-export async function sendOrderEmail(formData: OrderFormData) {
+export async function sendOrderEmail(formData: OrderFormData, imageBase64: string | null = null) {
   const orderSummary = formatOrder(formData);
   const customerName = formData.firstName;
+
+  const preferredContactLine =
+    formData.preferredContact === "instagram"
+      ? `Preferred contact: Instagram DM (@${formData.instagramHandle})`
+      : `Preferred contact: ${formData.preferredContact === "email" ? "Email" : "Phone"}`;
 
   await Promise.all([
     // Notification to Holly
@@ -56,13 +61,17 @@ export async function sendOrderEmail(formData: OrderFormData) {
       to: HOLLY_EMAIL,
       replyTo: formData.email,
       subject: `New custom order from ${formData.firstName} ${formData.lastName}`,
-      text: `New order from ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\n---\n\n${orderSummary}`,
+      text: `New order from ${formData.firstName} ${formData.lastName}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n${preferredContactLine}\n\n---\n\n${orderSummary}`,
+      ...(imageBase64 && formData.referenceImageName
+        ? { attachments: [{ filename: formData.referenceImageName, content: imageBase64 }] }
+        : {}),
     }),
 
     // Confirmation to customer
     resend.emails.send({
       from: FROM,
       to: formData.email,
+      replyTo: HOLLY_EMAIL,
       subject: "Your custom order request is in!",
       html: `
         <div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1C1917;">

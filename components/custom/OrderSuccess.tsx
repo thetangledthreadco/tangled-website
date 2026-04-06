@@ -8,8 +8,6 @@ interface OrderSuccessProps {
 export default function OrderSuccess({ firstName, email }: OrderSuccessProps) {
   return (
     <div className="py-8">
-      <div className="w-px h-10 bg-rose mb-8" />
-
       <h2 className="font-serif text-4xl text-brown mb-4 font-light">
         Order received, {firstName}.
       </h2>

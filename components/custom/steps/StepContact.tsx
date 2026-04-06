@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { OrderFormData } from "@/lib/types";
+import type { OrderFormData, PreferredContact } from "@/lib/types";
 
 interface StepContactProps {
   formData: OrderFormData;
@@ -29,6 +29,12 @@ export default function StepContact({
     }
     if (!formData.phone.trim()) {
       errs.phone = "Phone number is required.";
+    }
+    if (!formData.preferredContact) {
+      errs.preferredContact = "Please choose how you'd like to be contacted.";
+    }
+    if (formData.preferredContact === "instagram" && !formData.instagramHandle.trim()) {
+      errs.instagramHandle = "Instagram handle is required.";
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
@@ -115,7 +121,7 @@ export default function StepContact({
         )}
       </div>
 
-      <div className="mb-10">
+      <div className="mb-5">
         <label
           htmlFor="phone"
           className="block font-sans text-sm font-medium text-ink mb-2"
@@ -137,9 +143,53 @@ export default function StepContact({
         {errors.phone && (
           <p className="font-sans text-xs text-rose mt-1.5">{errors.phone}</p>
         )}
-        <p className="font-sans text-xs text-muted mt-2">
-          Used only to confirm order details. No spam, ever.
+      </div>
+
+      <div className="mb-10">
+        <p className="block font-sans text-sm font-medium text-ink mb-3">
+          Preferred contact method <span className="text-rose">*</span>
         </p>
+        <div className="flex flex-wrap gap-3 mb-3">
+          {(["email", "phone", "instagram"] as PreferredContact[]).map((method) => (
+            <button
+              key={method}
+              type="button"
+              onClick={() => onChange({ preferredContact: method, instagramHandle: method !== "instagram" ? "" : formData.instagramHandle })}
+              className={`px-5 py-2.5 rounded border font-sans text-sm font-medium transition-all cursor-pointer capitalize ${
+                formData.preferredContact === method
+                  ? "border-rose bg-rose/5 text-rose"
+                  : "border-border bg-warm-white text-ink hover:border-rose/40 hover:bg-oat"
+              }`}
+            >
+              {method === "instagram" ? "Instagram DM" : method.charAt(0).toUpperCase() + method.slice(1)}
+            </button>
+          ))}
+        </div>
+        {errors.preferredContact && (
+          <p className="font-sans text-xs text-rose mb-3">{errors.preferredContact}</p>
+        )}
+
+        {formData.preferredContact === "instagram" && (
+          <div>
+            <label htmlFor="instagramHandle" className="block font-sans text-sm font-medium text-ink mb-2">
+              Instagram handle <span className="text-rose">*</span>
+            </label>
+            <div className="flex items-center">
+              <span className="px-3 py-3 border border-r-0 border-border rounded-l bg-oat font-sans text-sm text-muted">@</span>
+              <input
+                id="instagramHandle"
+                type="text"
+                value={formData.instagramHandle}
+                onChange={(e) => onChange({ instagramHandle: e.target.value.replace(/^@/, "") })}
+                placeholder="yourhandle"
+                className={`flex-1 px-4 py-3 rounded-r border bg-warm-white font-sans text-base text-ink placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-rose/30 transition-colors ${errors.instagramHandle ? "border-rose" : "border-border focus:border-rose/50"}`}
+              />
+            </div>
+            {errors.instagramHandle && (
+              <p className="font-sans text-xs text-rose mt-1.5">{errors.instagramHandle}</p>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="flex gap-3">

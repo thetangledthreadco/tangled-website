@@ -26,6 +26,7 @@ export async function sendContactEmail(form: {
     resend.emails.send({
       from: FROM,
       to: form.email,
+      replyTo: HOLLY_EMAIL,
       subject: "Got your message!",
       html: `
         <div style="font-family: Georgia, serif; max-width: 520px; margin: 0 auto; padding: 40px 24px; color: #1C1917;">

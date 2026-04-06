@@ -24,6 +24,8 @@ export type FontStyle =
 
 export type DeliveryMethod = "shipping" | "pickup";
 
+export type PreferredContact = "email" | "phone" | "instagram" | "";
+
 export type SpecialtyDesign = "block-letter" | "floral-letter" | "";
 
 export interface OrderFormData {
@@ -43,12 +45,17 @@ export interface OrderFormData {
   notes: string;
   // Step 5
   delivery: DeliveryMethod | "";
-  zipCode: string;
+  shippingAddress: string;
+  shippingCity: string;
+  shippingState: string;
+  shippingZip: string;
   // Step 6
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
+  preferredContact: PreferredContact;
+  instagramHandle: string;
 }
 
 export const INITIAL_FORM_DATA: OrderFormData = {
@@ -63,11 +70,16 @@ export const INITIAL_FORM_DATA: OrderFormData = {
   referenceImageName: "",
   notes: "",
   delivery: "",
-  zipCode: "",
+  shippingAddress: "",
+  shippingCity: "",
+  shippingState: "",
+  shippingZip: "",
   firstName: "",
   lastName: "",
   email: "",
   phone: "",
+  preferredContact: "",
+  instagramHandle: "",
 };
 
 export interface DropItem {
