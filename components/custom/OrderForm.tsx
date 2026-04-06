@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import type { OrderFormData } from "@/lib/types";
 import { INITIAL_FORM_DATA } from "@/lib/types";
 import { sendOrderEmail } from "@/lib/actions/sendOrderEmail";
@@ -30,13 +30,15 @@ export default function OrderForm() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [formData, setFormData] = useState<OrderFormData>(INITIAL_FORM_DATA);
+  const topRef = useRef<HTMLDivElement>(null);
 
   const update = (data: Partial<OrderFormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
   };
 
-  const next = () => { setStep((s) => Math.min(s + 1, 7)); window.scrollTo({ top: 0, behavior: "smooth" }); };
-  const back = () => { setStep((s) => Math.max(s - 1, 1)); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const scrollToTop = () => topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const next = () => { setStep((s) => Math.min(s + 1, 7)); scrollToTop(); };
+  const back = () => { setStep((s) => Math.max(s - 1, 1)); scrollToTop(); };
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -62,6 +64,7 @@ export default function OrderForm() {
 
   return (
     <div>
+      <div ref={topRef} />
       <div className="mb-10">
         <StepIndicator
           currentStep={step}
