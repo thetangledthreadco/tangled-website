@@ -1,6 +1,8 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
+
+const MAX_FILE_SIZE_MB = 10;
 import type { OrderFormData } from "@/lib/types";
 
 interface StepUploadProps {
@@ -12,9 +14,16 @@ interface StepUploadProps {
 
 export default function StepUpload({ formData, onChange, onNext, onBack }: StepUploadProps) {
   const fileRef = useRef<HTMLInputElement>(null);
+  const [fileError, setFileError] = useState("");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
+    if (file && file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      setFileError(`Image must be under ${MAX_FILE_SIZE_MB}MB. Please compress or resize it first.`);
+      if (fileRef.current) fileRef.current.value = "";
+      return;
+    }
+    setFileError("");
     onChange({
       referenceImageFile: file,
       referenceImageName: file?.name ?? "",
@@ -74,9 +83,12 @@ export default function StepUpload({ formData, onChange, onNext, onBack }: StepU
             </>
           )}
         </div>
-        <p className="font-sans text-xs text-muted mt-2">
-          Share an inspiration photo, a font reference, or a placement example.
-        </p>
+        {fileError && <p className="font-sans text-xs text-rose mt-2">{fileError}</p>}
+        {!fileError && (
+          <p className="font-sans text-xs text-muted mt-2">
+            Share an inspiration photo, a font reference, or a placement example.
+          </p>
+        )}
       </div>
 
       {/* Notes */}
