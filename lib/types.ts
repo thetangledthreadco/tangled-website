@@ -2,15 +2,9 @@ export type ItemType =
   | "baby-toddler-sweater"
   | "big-kid-sweater"
   | "adult-sweater"
-  | "chunky-romper"
   | "fine-gauge-romper"
-  | "ftcwhp-romper"
-  | "brave-little-one-romper"
   | "blanket-cotton"
-  | "blanket-acrylic"
-  | "denim-jacket"
-  | "pillow-case"
-  | "beanie";
+  | "custom";
 
 export type FontStyle =
   | "font-1"
@@ -26,6 +20,8 @@ export type DeliveryMethod = "shipping" | "pickup";
 
 export type PreferredContact = "email" | "phone" | "instagram" | "";
 
+export type RomperStyle = "ruffled" | "non-ruffled" | "";
+
 export type SpecialtyDesign = "block-letter" | "floral-letter" | "";
 
 export interface OrderFormData {
@@ -36,9 +32,11 @@ export interface OrderFormData {
   wording: string;
   fontStyle: FontStyle | "";
   yarnColors: string[];
+  inquiryDescription: string;
   // Step 3
   size: string;
   itemColor: string;
+  romperStyle: RomperStyle;
   // Step 4
   referenceImageFile: File | null;
   referenceImageName: string;
@@ -64,8 +62,10 @@ export const INITIAL_FORM_DATA: OrderFormData = {
   wording: "",
   fontStyle: "",
   yarnColors: [],
+  inquiryDescription: "",
   size: "",
   itemColor: "",
+  romperStyle: "",
   referenceImageFile: null,
   referenceImageName: "",
   notes: "",

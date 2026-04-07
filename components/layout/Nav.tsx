@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/custom", label: "Custom Orders" },
   { href: "/drops", label: "Drops" },
   { href: "/gallery", label: "Gallery" },
+  { href: "/reviews", label: "Reviews" },
   { href: "/about", label: "About" },
   { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
@@ -76,14 +77,12 @@ export default function Nav() {
                 {link.label}
               </Link>
             ))}
-            <a
-              href="https://shop.thetangledthreadco.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ml-2 px-5 py-2 rounded border border-brown text-brown text-sm font-medium hover:bg-oat transition-colors tracking-wide"
+            <button
+              disabled
+              className="ml-2 px-5 py-2 rounded border border-border text-muted text-sm font-medium tracking-wide cursor-not-allowed opacity-50"
             >
               Shop Drops
-            </a>
+            </button>
           </nav>
 
           {/* Mobile hamburger */}
@@ -123,14 +122,12 @@ export default function Nav() {
                 {link.label}
               </Link>
             ))}
-            <a
-              href="https://shop.thetangledthreadco.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-4 py-3 text-center rounded border border-brown text-brown font-medium hover:bg-oat transition-colors"
+            <button
+              disabled
+              className="mt-4 py-3 text-center rounded border border-border text-muted font-medium cursor-not-allowed opacity-50"
             >
-              Shop Drops
-            </a>
+              Shop Drops — Coming Soon
+            </button>
           </nav>
         </div>
       )}

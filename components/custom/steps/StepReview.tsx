@@ -12,15 +12,9 @@ const itemLabels: Record<string, string> = {
   "baby-toddler-sweater": "Baby & Toddler Sweater",
   "big-kid-sweater": "Big Kid Sweater",
   "adult-sweater": "Adult Sweater",
-  "chunky-romper": "Chunky Knit Romper",
   "fine-gauge-romper": "Fine-Gauge Knit Romper",
-  "ftcwhp-romper": '"For This Child We Have Prayed" Romper',
-  "brave-little-one-romper": '"Brave Little One" Romper',
   "blanket-cotton": "Baby Blanket - 100% Cotton",
-  "blanket-acrylic": "Baby Blanket - Acrylic",
-  "denim-jacket": "Denim Jacket",
-  "pillow-case": "Pillow Case",
-  "beanie": "Infant/Kids Beanie",
+  "custom": "Custom Inquiry",
 };
 
 const fontLabels: Record<string, string> = {
@@ -66,14 +60,21 @@ export default function StepReview({ formData, onSubmit, onBack, submitting, sub
           Your Order
         </p>
         <Row label="Item" value={itemLabels[formData.itemType] ?? formData.itemType} />
-        {formData.specialtyDesign && (
-          <Row label="Specialty design" value={specialtyDesignLabels[formData.specialtyDesign] ?? formData.specialtyDesign} />
+        {formData.itemType === "custom" ? (
+          <Row label="Description" value={formData.inquiryDescription} />
+        ) : (
+          <>
+            {formData.specialtyDesign && (
+              <Row label="Specialty design" value={specialtyDesignLabels[formData.specialtyDesign] ?? formData.specialtyDesign} />
+            )}
+            <Row label={formData.specialtyDesign ? "Letter" : "Wording"} value={`"${formData.wording}"`} />
+            <Row label="Font" value={fontLabels[formData.fontStyle] ?? formData.fontStyle} />
+            <Row label="Yarn color(s)" value={formData.yarnColors.join(", ")} />
+          </>
         )}
-        <Row label={formData.specialtyDesign ? "Letter" : "Wording"} value={`"${formData.wording}"`} />
-        <Row label="Font" value={fontLabels[formData.fontStyle] ?? formData.fontStyle} />
-        <Row label="Yarn color(s)" value={formData.yarnColors.join(", ")} />
         <Row label="Size" value={formData.size} />
-        {formData.itemColor && <Row label="Sweater color" value={formData.itemColor} />}
+        {formData.romperStyle && <Row label="Romper style" value={formData.romperStyle === "ruffled" ? "Ruffled" : "Non-Ruffled"} />}
+        {formData.itemColor && <Row label={formData.romperStyle || formData.itemType === "blanket-cotton" ? "Color" : "Sweater color"} value={formData.itemColor} />}
         {formData.referenceImageName && (
           <Row label="Reference image" value={formData.referenceImageName} />
         )}

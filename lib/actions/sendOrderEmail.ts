@@ -12,15 +12,9 @@ const itemLabels: Record<string, string> = {
   "baby-toddler-sweater": "Baby & Toddler Sweater",
   "big-kid-sweater": "Big Kid Sweater",
   "adult-sweater": "Adult Sweater",
-  "chunky-romper": "Chunky Knit Romper",
   "fine-gauge-romper": "Fine-Gauge Knit Romper",
-  "ftcwhp-romper": '"For This Child We Have Prayed" Romper',
-  "brave-little-one-romper": '"Brave Little One" Romper',
   "blanket-cotton": "Baby Blanket, 100% Cotton",
-  "blanket-acrylic": "Baby Blanket, Acrylic",
-  "denim-jacket": "Denim Jacket",
-  "pillow-case": "Pillow Case",
-  "beanie": "Infant/Kids Beanie",
+  "custom": "Custom Inquiry",
 };
 
 const specialtyLabels: Record<string, string> = {
@@ -31,12 +25,16 @@ const specialtyLabels: Record<string, string> = {
 function formatOrder(formData: OrderFormData): string {
   const lines = [
     `Item: ${itemLabels[formData.itemType] ?? formData.itemType}`,
-    formData.specialtyDesign ? `Specialty design: ${specialtyLabels[formData.specialtyDesign] ?? formData.specialtyDesign}` : null,
-    `${formData.specialtyDesign ? "Letter" : "Wording"}: ${formData.wording}`,
-    formData.fontStyle ? `Font: ${formData.fontStyle}` : null,
-    `Yarn colors: ${formData.yarnColors.join(", ")}`,
+    formData.itemType === "custom"
+      ? `Description: ${formData.inquiryDescription}`
+      : null,
+    formData.itemType !== "custom" && formData.specialtyDesign ? `Specialty design: ${specialtyLabels[formData.specialtyDesign] ?? formData.specialtyDesign}` : null,
+    formData.itemType !== "custom" ? `${formData.specialtyDesign ? "Letter" : "Wording"}: ${formData.wording}` : null,
+    formData.itemType !== "custom" && formData.fontStyle ? `Font: ${formData.fontStyle}` : null,
+    formData.itemType !== "custom" ? `Yarn colors: ${formData.yarnColors.join(", ")}` : null,
     `Size: ${formData.size}`,
-    formData.itemColor ? `Sweater color: ${formData.itemColor}` : null,
+    formData.romperStyle ? `Romper style: ${formData.romperStyle === "ruffled" ? "Ruffled" : "Non-Ruffled"}` : null,
+    formData.itemColor ? `${formData.romperStyle || formData.itemType === "blanket-cotton" ? "Color" : "Sweater color"}: ${formData.itemColor}` : null,
     formData.referenceImageName ? `Reference image: ${formData.referenceImageName}` : null,
     formData.notes ? `Notes: ${formData.notes}` : null,
     `Delivery: ${formData.delivery === "shipping" ? `Ship to ${formData.shippingAddress}, ${formData.shippingCity}, ${formData.shippingState} ${formData.shippingZip}` : "Local pickup - Spokane, WA"}`,

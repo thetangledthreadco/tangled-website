@@ -35,15 +35,10 @@ export default function Hero() {
               Ready-to-ship pieces,{" "}
               <span className="italic">released in small batches.</span>
             </h2>
-            <a
-              href="https://shop.thetangledthreadco.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-2 font-sans text-sm text-brown transition-colors duration-300 hover:text-rose"
-            >
+            <span className="inline-flex items-center gap-2 font-sans text-sm text-muted/60 cursor-not-allowed">
               Shop Drops
-              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </a>
+              <span className="text-xs border border-muted/30 text-muted/60 px-1.5 py-0.5 rounded">Coming Soon</span>
+            </span>
           </div>
 
         </div>

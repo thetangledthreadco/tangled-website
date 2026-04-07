@@ -25,14 +25,12 @@ export default function DropsPage() {
               it&apos;s gone. Checkout happens through the Shopify store.
             </p>
           </div>
-          <a
-            href="https://shop.thetangledthreadco.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center self-start md:self-auto px-8 py-4 bg-rose text-warm-white font-sans font-medium text-sm rounded hover:bg-rose-dark transition-colors shrink-0 tracking-wide"
+          <button
+            disabled
+            className="inline-flex items-center justify-center self-start md:self-auto px-8 py-4 bg-rose/40 text-warm-white font-sans font-medium text-sm rounded shrink-0 tracking-wide cursor-not-allowed"
           >
-            View Full Drop on Shopify
-          </a>
+            Coming Soon
+          </button>
         </div>
       </section>
 

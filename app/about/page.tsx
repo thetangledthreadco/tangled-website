@@ -18,8 +18,7 @@ export default function AboutPage() {
             About
           </p>
           <h1 className="font-serif text-5xl md:text-6xl text-brown font-light leading-tight max-w-xl">
-            Made with intention,{" "}
-            <span className="italic">one stitch at a time.</span>
+            How it started.
           </h1>
         </div>
       </section>
@@ -55,6 +54,9 @@ export default function AboutPage() {
                 </p>
                 <p>
                   I&apos;m based in Spokane, WA. By day I&apos;m a software engineer (yes, I built this site too). Every order is made by my own hands, and every piece gets my full attention from start to finish.
+                </p>
+                <p>
+                  The name came from a season of life that felt a little tangled. Picking up a needle and thread was something I could control, something that made sense even when other things didn&apos;t. And tangled threads still make something beautiful in the end, so it stuck.
                 </p>
                 <p>
                   I&apos;ve also started reworking and upcycling clothing, and have

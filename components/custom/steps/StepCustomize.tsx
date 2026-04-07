@@ -56,15 +56,21 @@ export default function StepCustomize({
   const isLetterDesign = formData.specialtyDesign === "block-letter" || formData.specialtyDesign === "floral-letter";
   const maxColors = formData.specialtyDesign === "block-letter" ? 1 : formData.specialtyDesign === "floral-letter" ? 5 : MAX_COLORS;
 
+  const isCustomInquiry = formData.itemType === "custom";
+
   const validate = () => {
     const errs: typeof errors = {};
-    if (!formData.wording.trim()) {
-      errs.wording = isLetterDesign ? "Please enter the letter to embroider." : "Please enter the wording to embroider.";
-    } else if (isLetterDesign && formData.wording.trim().length > 1) {
-      errs.wording = "Block and floral letter designs use a single letter.";
+    if (isCustomInquiry) {
+      if (!formData.inquiryDescription.trim()) errs.wording = "Please describe what you have in mind.";
+    } else {
+      if (!formData.wording.trim()) {
+        errs.wording = isLetterDesign ? "Please enter the letter to embroider." : "Please enter the wording to embroider.";
+      } else if (isLetterDesign && formData.wording.trim().length > 1) {
+        errs.wording = "Block and floral letter designs use a single letter.";
+      }
+      if (!isLetterDesign && !formData.fontStyle) errs.font = "Please choose a font style.";
+      if (formData.yarnColors.length === 0) errs.colors = "Please select at least one yarn color.";
     }
-    if (!isLetterDesign && !formData.fontStyle) errs.font = "Please choose a font style.";
-    if (formData.yarnColors.length === 0) errs.colors = "Please select at least one yarn color.";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -76,46 +82,70 @@ export default function StepCustomize({
 
   return (
     <div>
-      <h2 className="font-serif text-3xl text-brown mb-2">Customize your piece</h2>
+      <h2 className="font-serif text-3xl text-brown mb-2">
+        {isCustomInquiry ? "Tell me what you're thinking" : "Customize your piece"}
+      </h2>
       <p className="font-sans text-sm text-muted mb-8">
-        Enter the wording, choose a font, and pick your yarn colors.
+        {isCustomInquiry
+          ? "Describe your idea and I'll reach out to talk through the details."
+          : "Enter the wording, choose a font, and pick your yarn colors."}
       </p>
 
-      {/* Specialty design */}
-      <div className="mb-8">
-        <p className="font-sans text-sm font-medium text-ink mb-3">Specialty design <span className="font-normal text-muted">(optional)</span></p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {specialtyOptions.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => {
-                const next = formData.specialtyDesign === opt.value ? "" : opt.value;
-                const colorLimit = next === "block-letter" ? 1 : next === "floral-letter" ? 5 : MAX_COLORS;
-                onChange({
-                  specialtyDesign: next,
-                  wording: "",
-                  fontStyle: "",
-                  yarnColors: formData.yarnColors.slice(0, colorLimit),
-                });
-              }}
-              className={`
-                text-left p-3 rounded border-2 transition-all duration-200 cursor-pointer
-                ${formData.specialtyDesign === opt.value
-                  ? "border-rose bg-rose/5"
-                  : "border-border bg-warm-white hover:border-rose/40 hover:bg-oat"
-                }
-              `}
-            >
-              <span className="font-serif text-sm text-brown block">{opt.label}</span>
-              <span className="font-sans text-xs text-muted block">{opt.desc}</span>
-              <span className="font-sans text-xs font-medium text-rose block mt-1">{opt.price}</span>
-            </button>
-          ))}
+      {isCustomInquiry && (
+        <div className="mb-10">
+          <label htmlFor="inquiryDescription" className="block font-sans text-sm font-medium text-ink mb-2">
+            What do you have in mind? <span className="text-rose">*</span>
+          </label>
+          <textarea
+            id="inquiryDescription"
+            rows={6}
+            value={formData.inquiryDescription}
+            onChange={(e) => onChange({ inquiryDescription: e.target.value })}
+            placeholder="e.g. I'd love a custom denim jacket with my daughter's name and a floral design…"
+            className={`w-full px-4 py-3 rounded border bg-warm-white font-sans text-base text-ink placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-rose/30 focus:border-rose/50 resize-none transition-colors ${errors.wording ? "border-rose" : "border-border"}`}
+          />
+          {errors.wording && <p className="font-sans text-xs text-rose mt-1.5">{errors.wording}</p>}
         </div>
-      </div>
+      )}
 
-      {/* Wording */}
+      {/* Specialty design - not shown for blankets or custom inquiries */}
+      {!isCustomInquiry && formData.itemType !== "blanket-cotton" && (
+        <div className="mb-8">
+          <p className="font-sans text-sm font-medium text-ink mb-3">Specialty design <span className="font-normal text-muted">(optional)</span></p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {specialtyOptions.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => {
+                  const next = formData.specialtyDesign === opt.value ? "" : opt.value;
+                  const colorLimit = next === "block-letter" ? 1 : next === "floral-letter" ? 5 : MAX_COLORS;
+                  onChange({
+                    specialtyDesign: next,
+                    wording: "",
+                    fontStyle: "",
+                    yarnColors: formData.yarnColors.slice(0, colorLimit),
+                  });
+                }}
+                className={`
+                  text-left p-3 rounded border-2 transition-all duration-200 cursor-pointer
+                  ${formData.specialtyDesign === opt.value
+                    ? "border-rose bg-rose/5"
+                    : "border-border bg-warm-white hover:border-rose/40 hover:bg-oat"
+                  }
+                `}
+              >
+                <span className="font-serif text-sm text-brown block">{opt.label}</span>
+                <span className="font-sans text-xs text-muted block">{opt.desc}</span>
+                <span className="font-sans text-xs font-medium text-rose block mt-1">{opt.price}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Wording / Font / Yarn — hidden for custom inquiries */}
+      {!isCustomInquiry && (<>
       <div className="mb-8">
         <label htmlFor="wording" className="block font-sans text-sm font-medium text-ink mb-2">
           {isLetterDesign ? "Letter" : "Wording"} <span className="text-rose">*</span>
@@ -240,6 +270,7 @@ export default function StepCustomize({
         )}
         {errors.colors && <p className="font-sans text-xs text-rose mt-1">{errors.colors}</p>}
       </div>
+      </>)}
 
       {/* Font modal */}
       {showFontModal && (

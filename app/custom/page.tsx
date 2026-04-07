@@ -12,15 +12,10 @@ const pricingItems = [
   { label: "Baby & Toddler Sweater", price: "$45", detail: "0m–5T" },
   { label: "Big Kid Sweater", price: "$50", detail: "Sizes 5–12" },
   { label: "Adult Sweater", price: "$55", detail: "S–XL" },
-  { label: "Chunky Knit Romper", price: "$45", detail: "Infant sizes" },
   { label: "Fine-Gauge Knit Romper", price: "$45", detail: "Infant sizes" },
   { label: '"For This Child We Have Prayed"', price: "$60", detail: "Specialty romper" },
   { label: '"Brave Little One"', price: "$50", detail: "Specialty romper" },
   { label: "Baby Blanket, 100% Cotton", price: "$50", detail: "90×70 cm" },
-  { label: "Baby Blanket, Acrylic", price: "$45", detail: "Soft, durable, stretchy" },
-  { label: "Denim Jacket", price: "$60", detail: "12m through big kid" },
-  { label: "Pillow Case", price: "$40", detail: "Standard size" },
-  { label: "Infant/Kids Beanie", price: "$25+", detail: "Multiple sizes" },
 ];
 
 const addOnItems = [
@@ -156,16 +151,7 @@ export default function CustomPage() {
               Start your custom order
             </h2>
             <p className="font-sans text-sm text-muted leading-relaxed">
-              Fill out the form below, or reach out on{" "}
-              <a
-                href="https://instagram.com/the.tangled.thread.co"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-rose hover:text-rose-dark transition-colors"
-              >
-                Instagram
-              </a>{" "}
-              or whichever feels easier. I&apos;ll follow up to confirm details and send a
+              Fill out the form below. I&apos;ll follow up to confirm details and send a
               50% deposit invoice before getting started.
             </p>
           </div>

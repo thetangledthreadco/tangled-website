@@ -18,14 +18,12 @@ export default function FinalCTA() {
           >
             Start a Custom Order
           </Link>
-          <a
-            href="https://shop.thetangledthreadco.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center px-8 py-4 border border-warm-white/25 text-warm-white font-sans font-medium text-sm rounded hover:bg-warm-white/10 transition-colors tracking-wide"
+          <button
+            disabled
+            className="inline-flex items-center justify-center px-8 py-4 border border-warm-white/15 text-warm-white/40 font-sans font-medium text-sm rounded tracking-wide cursor-not-allowed"
           >
-            Shop Drops
-          </a>
+            Shop Drops — Coming Soon
+          </button>
         </div>
       </div>
     </section>

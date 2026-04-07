@@ -37,8 +37,9 @@ export default function OrderForm() {
   };
 
   const scrollToTop = () => topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  const next = () => { setStep((s) => Math.min(s + 1, 7)); scrollToTop(); };
-  const back = () => { setStep((s) => Math.max(s - 1, 1)); scrollToTop(); };
+  const isCustom = formData.itemType === "custom";
+  const next = () => { setStep((s) => { const n = s + 1; return Math.min(isCustom && n === 3 ? 4 : n, 7); }); scrollToTop(); };
+  const back = () => { setStep((s) => { const n = s - 1; return Math.max(isCustom && n === 3 ? 2 : n, 1); }); scrollToTop(); };
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -50,6 +51,7 @@ export default function OrderForm() {
         imageBase64 = Buffer.from(buffer).toString("base64");
       }
       await sendOrderEmail(formData, imageBase64);
+      scrollToTop();
       setSubmitted(true);
     } catch {
       setSubmitError("Something went wrong submitting your order. Please try again or DM me on Instagram.");

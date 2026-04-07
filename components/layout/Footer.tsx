@@ -83,14 +83,9 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a
-                  href="https://shop.thetangledthreadco.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-sans text-sm text-ink hover:text-rose transition-colors"
-                >
-                  Shop Drops on Shopify ↗
-                </a>
+                <span className="font-sans text-sm text-muted/50 cursor-not-allowed">
+                  Shop Drops — Coming Soon
+                </span>
               </li>
               <li>
                 <Link

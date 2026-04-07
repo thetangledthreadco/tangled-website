@@ -31,28 +31,10 @@ const items: {
     price: "$55",
   },
   {
-    type: "chunky-romper",
-    label: "Chunky Knit Romper",
-    desc: "Infant sizes",
-    price: "$45",
-  },
-  {
     type: "fine-gauge-romper",
     label: "Fine-Gauge Knit Romper",
     desc: "Infant sizes",
     price: "$45",
-  },
-  {
-    type: "ftcwhp-romper",
-    label: '"For This Child We Have Prayed"',
-    desc: "Specialty romper",
-    price: "$60",
-  },
-  {
-    type: "brave-little-one-romper",
-    label: '"Brave Little One"',
-    desc: "Specialty romper",
-    price: "$50",
   },
   {
     type: "blanket-cotton",
@@ -61,28 +43,10 @@ const items: {
     price: "$50",
   },
   {
-    type: "blanket-acrylic",
-    label: "Baby Blanket, Acrylic",
-    desc: "Soft, durable, stretchy",
-    price: "$45",
-  },
-  {
-    type: "denim-jacket",
-    label: "Denim Jacket",
-    desc: "12m through big kid",
-    price: "$60",
-  },
-  {
-    type: "pillow-case",
-    label: "Pillow Case",
-    desc: "Standard size",
-    price: "$40",
-  },
-  {
-    type: "beanie",
-    label: "Infant / Kids Beanie",
-    desc: "Multiple sizes",
-    price: "$25+",
+    type: "custom",
+    label: "Something else",
+    desc: "Denim jacket, pillow case, backpack, tote bag, and more",
+    price: "Let's chat",
   },
 ];
 
