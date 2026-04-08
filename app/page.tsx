@@ -173,7 +173,7 @@ export default async function HomePage() {
               href="/custom"
               className="inline-flex items-center justify-center px-8 py-4 bg-rose text-warm-white font-sans font-medium text-sm rounded hover:bg-rose-dark transition-colors"
             >
-              Start a Custom Order
+              Order Your Custom Piece
             </Link>
           </div>
         </div>
