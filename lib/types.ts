@@ -24,39 +24,23 @@ export type RomperStyle = "ruffled" | "non-ruffled" | "";
 
 export type SpecialtyDesign = "block-letter" | "floral-letter" | "";
 
-export interface OrderFormData {
-  // Step 1
+// A single configured item in the cart
+export interface CartItem {
   itemType: ItemType | "";
-  // Step 2
   specialtyDesign: SpecialtyDesign;
   wording: string;
   fontStyle: FontStyle | "";
   yarnColors: string[];
   inquiryDescription: string;
-  // Step 3
   size: string;
   itemColor: string;
   romperStyle: RomperStyle;
-  // Step 4
   referenceImageFile: File | null;
   referenceImageName: string;
   notes: string;
-  // Step 5
-  delivery: DeliveryMethod | "";
-  shippingAddress: string;
-  shippingCity: string;
-  shippingState: string;
-  shippingZip: string;
-  // Step 6
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  preferredContact: PreferredContact;
-  instagramHandle: string;
 }
 
-export const INITIAL_FORM_DATA: OrderFormData = {
+export const EMPTY_CART_ITEM: CartItem = {
   itemType: "",
   specialtyDesign: "",
   wording: "",
@@ -69,6 +53,29 @@ export const INITIAL_FORM_DATA: OrderFormData = {
   referenceImageFile: null,
   referenceImageName: "",
   notes: "",
+};
+
+// OrderFormData = current item being configured + completed cart + checkout fields
+export interface OrderFormData extends CartItem {
+  cart: CartItem[];
+  // Delivery (step 6)
+  delivery: DeliveryMethod | "";
+  shippingAddress: string;
+  shippingCity: string;
+  shippingState: string;
+  shippingZip: string;
+  // Contact (step 7)
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  preferredContact: PreferredContact;
+  instagramHandle: string;
+}
+
+export const INITIAL_FORM_DATA: OrderFormData = {
+  ...EMPTY_CART_ITEM,
+  cart: [],
   delivery: "",
   shippingAddress: "",
   shippingCity: "",

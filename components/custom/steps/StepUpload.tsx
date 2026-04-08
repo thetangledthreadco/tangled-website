@@ -49,9 +49,10 @@ interface StepUploadProps {
   onChange: (data: Partial<OrderFormData>) => void;
   onNext: () => void;
   onBack: () => void;
+  isEditing?: boolean;
 }
 
-export default function StepUpload({ formData, onChange, onNext, onBack }: StepUploadProps) {
+export default function StepUpload({ formData, onChange, onNext, onBack, isEditing }: StepUploadProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [fileError, setFileError] = useState("");
   const [compressing, setCompressing] = useState(false);
@@ -174,7 +175,7 @@ export default function StepUpload({ formData, onChange, onNext, onBack }: StepU
           disabled={compressing}
           className="flex-1 px-6 py-3 rounded bg-rose text-warm-white font-sans font-medium text-sm hover:bg-rose-dark transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Continue
+          {isEditing ? "Update item →" : "Add to Cart →"}
         </button>
       </div>
     </div>

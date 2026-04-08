@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
-import type { Order, OrderStatus } from "./orderTypes";
-export type { Order, OrderStatus } from "./orderTypes";
+import type { Order, OrderStatus, CartItemRecord } from "./orderTypes";
+export type { Order, OrderStatus, CartItemRecord } from "./orderTypes";
 export { STATUS_LABELS, STATUS_FLOW } from "./orderTypes";
 
 const supabase = createClient(
@@ -26,6 +26,7 @@ export interface InsertOrderPayload {
   item_color: string;
   romper_style: string;
   notes: string;
+  items: CartItemRecord[] | null;
   delivery: string;
   shipping_address: string;
   shipping_city: string;

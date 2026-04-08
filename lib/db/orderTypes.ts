@@ -1,3 +1,18 @@
+// Serializable cart item stored in DB JSONB column (no File objects)
+export interface CartItemRecord {
+  itemType: string;
+  specialtyDesign: string;
+  wording: string;
+  fontStyle: string;
+  yarnColors: string[];
+  inquiryDescription: string;
+  size: string;
+  itemColor: string;
+  romperStyle: string;
+  referenceImageName: string;
+  notes: string;
+}
+
 export type OrderStatus =
   | "new"
   | "waiting_deposit"
@@ -49,6 +64,7 @@ export interface Order {
   item_color: string;
   romper_style: string;
   notes: string;
+  items: CartItemRecord[] | null;
   delivery: string;
   shipping_address: string;
   shipping_city: string;

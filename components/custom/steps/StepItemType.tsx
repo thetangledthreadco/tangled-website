@@ -45,7 +45,7 @@ const items: {
   {
     type: "custom",
     label: "Something else",
-    desc: "Denim jacket, pillow case, backpack, tote bag, and more",
+    desc: "Name basket, denim jacket, pillow case, backpack, tote bag, and more",
     price: "Let's chat",
   },
 ];

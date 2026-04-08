@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 
 const navLinks = [
   { href: "/custom", label: "Custom Orders" },
-  { href: "/drops", label: "Drops" },
   { href: "/gallery", label: "Gallery" },
   { href: "/reviews", label: "Reviews" },
   { href: "/about", label: "About" },
@@ -77,12 +76,6 @@ export default function Nav() {
                 {link.label}
               </Link>
             ))}
-            <button
-              disabled
-              className="ml-2 px-5 py-2 rounded border border-border text-muted text-sm font-medium tracking-wide cursor-not-allowed opacity-50"
-            >
-              Shop Drops
-            </button>
           </nav>
 
           {/* Mobile hamburger */}
@@ -122,12 +115,6 @@ export default function Nav() {
                 {link.label}
               </Link>
             ))}
-            <button
-              disabled
-              className="mt-4 py-3 text-center rounded border border-border text-muted font-medium cursor-not-allowed opacity-50"
-            >
-              Shop Drops — Coming Soon
-            </button>
           </nav>
         </div>
       )}

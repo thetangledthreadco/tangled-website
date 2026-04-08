@@ -178,17 +178,46 @@ export default function OrderPanel({ order, onUpdate, onClose }: Props) {
       </section>
 
       {/* Order details */}
-      <section className="mb-6 p-5 bg-warm-white border border-border rounded">
-        <p className="font-sans text-xs font-medium tracking-widest text-muted uppercase mb-4">Order Details</p>
-        <div className="divide-y divide-border">
-          {(detailRows.filter(Boolean) as [string, string][]).map(([label, value]) => (
-            <div key={label} className="flex justify-between gap-4 py-2.5 first:pt-0 last:pb-0">
-              <span className="font-sans text-xs text-muted shrink-0 pt-0.5">{label}</span>
-              <span className="font-sans text-sm text-ink text-right">{value}</span>
+      {order.items && order.items.length > 0 ? (
+        order.items.map((item, i) => (
+          <section key={i} className="mb-4 p-5 bg-warm-white border border-border rounded">
+            <p className="font-sans text-xs font-medium tracking-widest text-muted uppercase mb-4">
+              {order.items!.length > 1 ? `Item ${i + 1}` : "Order Details"}
+            </p>
+            <div className="divide-y divide-border">
+              {([
+                ["Item", itemLabels[item.itemType] ?? item.itemType],
+                item.itemType === "custom" ? ["Description", item.inquiryDescription] : item.wording ? ["Wording", item.wording] : null,
+                item.specialtyDesign ? ["Specialty design", item.specialtyDesign] : null,
+                item.fontStyle ? ["Font", item.fontStyle] : null,
+                item.yarnColors?.length ? ["Yarn colors", item.yarnColors.join(", ")] : null,
+                item.size ? ["Size", item.size] : null,
+                item.itemColor ? ["Color", item.itemColor] : null,
+                item.romperStyle ? ["Romper style", item.romperStyle === "ruffled" ? "Ruffled" : "Non-Ruffled"] : null,
+                item.notes ? ["Notes", item.notes] : null,
+                item.referenceImageName ? ["Reference image", item.referenceImageName] : null,
+              ].filter(Boolean) as [string, string][]).map(([label, value]) => (
+                <div key={label} className="flex justify-between gap-4 py-2.5 first:pt-0 last:pb-0">
+                  <span className="font-sans text-xs text-muted shrink-0 pt-0.5">{label}</span>
+                  <span className="font-sans text-sm text-ink text-right">{value}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
+          </section>
+        ))
+      ) : (
+        <section className="mb-6 p-5 bg-warm-white border border-border rounded">
+          <p className="font-sans text-xs font-medium tracking-widest text-muted uppercase mb-4">Order Details</p>
+          <div className="divide-y divide-border">
+            {(detailRows.filter(Boolean) as [string, string][]).map(([label, value]) => (
+              <div key={label} className="flex justify-between gap-4 py-2.5 first:pt-0 last:pb-0">
+                <span className="font-sans text-xs text-muted shrink-0 pt-0.5">{label}</span>
+                <span className="font-sans text-sm text-ink text-right">{value}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Internal notes */}
       <section className="mb-6 p-5 bg-warm-white border border-border rounded">

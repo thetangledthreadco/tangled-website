@@ -1,53 +1,47 @@
+import Image from "next/image";
 import Link from "next/link";
-import PhotoStrip from "@/components/home/PhotoStrip";
 
 export default function Hero() {
   return (
-    <section className="bg-cream pt-28 pb-24 md:pt-32 md:pb-32 px-6 md:px-12">
+    <section className="w-full pt-32 pb-20 md:pb-28 px-6 md:px-12 bg-cream">
       <div className="max-w-6xl mx-auto">
 
-        <div className="grid grid-cols-1 md:grid-cols-[56fr_40fr] gap-10 md:gap-16 items-start">
+        {/* Hero — Custom Embroidery */}
+        <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1fr] gap-10 md:gap-16 items-start">
 
-          {/* Left - Custom Embroidery */}
-          <div>
-            <p className="font-sans text-[10px] tracking-[0.22em] uppercase text-muted mb-3">
-              Custom Embroidery
+          <div className="group relative overflow-hidden aspect-[4/5]">
+            <Image
+              src="/images/portfolio/portfolio-flatlay.jpeg"
+              alt="Custom hand-embroidered sweaters laid flat"
+              fill
+              className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              sizes="(max-width: 768px) 100vw, 58vw"
+              priority
+            />
+          </div>
+
+          <div className="md:mt-16">
+            <p className="font-sans text-[10px] tracking-[0.22em] uppercase text-muted mb-4">
+              Custom Embroidery · Spokane, WA
             </p>
-            <h2 className="font-serif text-3xl md:text-4xl text-brown font-light leading-snug mb-5">
-              Designed with you,{" "}
-              <span className="italic">stitched by hand.</span>
-            </h2>
+            <h1 className="font-serif text-4xl md:text-5xl text-brown font-light leading-tight mb-5">
+              Tell me what<br className="hidden sm:block" /> to stitch.
+            </h1>
+            <p className="font-sans text-sm text-muted leading-relaxed mb-8 max-w-sm">
+              Hand-embroidered pieces made just for you — sweaters, rompers,
+              blankets, and more. Tell me what you want, I&apos;ll follow up to
+              confirm every detail, and then I get to stitching.
+            </p>
             <Link
               href="/custom"
-              className="group inline-flex items-center gap-2 font-sans text-sm text-brown transition-colors duration-300 hover:text-rose"
+              className="group/cta inline-flex items-center gap-2 font-sans text-sm font-medium text-brown transition-colors duration-300 hover:text-rose"
             >
               Start a Custom Order
-              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              <span className="transition-transform duration-300 group-hover/cta:translate-x-1">→</span>
             </Link>
           </div>
 
-          {/* Right - Drops */}
-          <div>
-            <p className="font-sans text-[10px] tracking-[0.22em] uppercase text-muted mb-3">
-              One-of-a-Kind Drops
-            </p>
-            <h2 className="font-serif text-3xl md:text-4xl text-brown font-light leading-snug mb-5">
-              Ready-to-ship pieces,{" "}
-              <span className="italic">released in small batches.</span>
-            </h2>
-            <span className="inline-flex items-center gap-2 font-sans text-sm text-muted/60 cursor-not-allowed">
-              Shop Drops
-              <span className="text-xs border border-muted/30 text-muted/60 px-1.5 py-0.5 rounded">Coming Soon</span>
-            </span>
-          </div>
-
         </div>
-
-        {/* Photo strip */}
-        <div className="mt-16 md:mt-24">
-          <PhotoStrip />
-        </div>
-
       </div>
     </section>
   );

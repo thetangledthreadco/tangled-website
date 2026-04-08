@@ -138,9 +138,14 @@ export default function StepOptions({
     onChange({ itemColor: "" });
   }
 
+  // Blankets are one size — auto-set so validation passes
+  if (showBlanketColor && !formData.size) {
+    onChange({ size: "One size" });
+  }
+
   const validate = () => {
     const errs: Record<string, string> = {};
-    if (!formData.size) errs.size = "Please select a size.";
+    if (!showBlanketColor && !formData.size) errs.size = "Please select a size.";
     if (showColorPicker && !formData.itemColor)
       errs.itemColor = "Please select a sweater color.";
     if (showRomperStyle && !formData.romperStyle)
@@ -160,40 +165,42 @@ export default function StepOptions({
         Choose your size{showColorPicker ? ", sweater color," : ""} and any add-ons.
       </p>
 
-      {/* Size */}
-      <div className="mb-8">
-        <label
-          htmlFor="size"
-          className="block font-sans text-sm font-medium text-ink mb-2"
-        >
-          Size <span className="text-rose">*</span>
-        </label>
-        <select
-          id="size"
-          value={formData.size}
-          onChange={(e) => onChange({ size: e.target.value })}
-          className={`
-            w-full px-4 py-3 rounded border bg-warm-white font-sans text-base text-ink
-            focus:outline-none focus:ring-2 focus:ring-rose/30 transition-colors
-            ${errors.size ? "border-rose" : "border-border focus:border-rose/50"}
-          `}
-        >
-          <option value="">Select a size…</option>
-          {sizes.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-        {errors.size && (
-          <p className="font-sans text-xs text-rose mt-1.5">{errors.size}</p>
-        )}
-        {isAdultOrKid && (
-          <p className="font-sans text-xs text-muted mt-1.5">
-            These sweaters are ordered in, so turnaround may be longer than usual. I'll give a better estimate when I follow up.
-          </p>
-        )}
-      </div>
+      {/* Size — hidden for blankets (one size) */}
+      {!showBlanketColor && (
+        <div className="mb-8">
+          <label
+            htmlFor="size"
+            className="block font-sans text-sm font-medium text-ink mb-2"
+          >
+            Size <span className="text-rose">*</span>
+          </label>
+          <select
+            id="size"
+            value={formData.size}
+            onChange={(e) => onChange({ size: e.target.value })}
+            className={`
+              w-full px-4 py-3 rounded border bg-warm-white font-sans text-base text-ink
+              focus:outline-none focus:ring-2 focus:ring-rose/30 transition-colors
+              ${errors.size ? "border-rose" : "border-border focus:border-rose/50"}
+            `}
+          >
+            <option value="">Select a size…</option>
+            {sizes.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+          {errors.size && (
+            <p className="font-sans text-xs text-rose mt-1.5">{errors.size}</p>
+          )}
+          {isAdultOrKid && (
+            <p className="font-sans text-xs text-muted mt-1.5">
+              These sweaters are ordered in, so turnaround may be longer than usual. I'll give a better estimate when I follow up.
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Fine-gauge romper style + color */}
       {showRomperStyle && (

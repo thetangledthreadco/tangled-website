@@ -56,6 +56,7 @@ export default function NewOrderForm({ onCreated, onCancel }: Props) {
         preferred_contact: form.preferred_contact,
         instagram_handle: form.instagram_handle,
         item_type: form.item_type,
+        items: null,
         specialty_design: "",
         wording: form.wording,
         font_style: "",

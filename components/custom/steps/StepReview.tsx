@@ -1,4 +1,4 @@
-import type { OrderFormData } from "@/lib/types";
+import type { OrderFormData, CartItem } from "@/lib/types";
 
 interface StepReviewProps {
   formData: OrderFormData;
@@ -18,30 +18,48 @@ const itemLabels: Record<string, string> = {
 };
 
 const fontLabels: Record<string, string> = {
-  "font-1": "Font 1",
-  "font-2": "Font 2",
-  "font-3": "Font 3",
-  "font-4": "Font 4",
-  "font-5": "Font 5",
-  "font-6": "Font 6",
-  "font-7": "Font 7",
-  "font-8": "Font 8",
+  "font-1": "Font 1", "font-2": "Font 2", "font-3": "Font 3", "font-4": "Font 4",
+  "font-5": "Font 5", "font-6": "Font 6", "font-7": "Font 7", "font-8": "Font 8",
 };
 
-const specialtyDesignLabels: Record<string, string> = {
+const specialtyLabels: Record<string, string> = {
   "block-letter": "Block Letter",
   "floral-letter": "Floral Letter",
 };
 
-interface RowProps {
-  label: string;
-  value: string;
-}
-function Row({ label, value }: RowProps) {
+function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between py-3 border-b border-border last:border-0">
+    <div className="flex justify-between py-2.5 border-b border-border last:border-0">
       <span className="font-sans text-sm text-muted">{label}</span>
       <span className="font-sans text-sm text-ink text-right max-w-[60%]">{value}</span>
+    </div>
+  );
+}
+
+function ItemSummary({ item, index, total }: { item: CartItem; index: number; total: number }) {
+  return (
+    <div className="bg-oat rounded p-5 mb-4">
+      <p className="font-sans text-xs font-medium tracking-widest text-muted uppercase mb-3">
+        {total > 1 ? `Item ${index + 1}` : "Your Order"}
+      </p>
+      <Row label="Item" value={itemLabels[item.itemType] ?? item.itemType} />
+      {item.itemType === "custom" ? (
+        <Row label="Description" value={item.inquiryDescription} />
+      ) : (
+        <>
+          {item.specialtyDesign && (
+            <Row label="Specialty design" value={specialtyLabels[item.specialtyDesign] ?? item.specialtyDesign} />
+          )}
+          <Row label={item.specialtyDesign ? "Letter" : "Wording"} value={`"${item.wording}"`} />
+          {item.fontStyle && <Row label="Font" value={fontLabels[item.fontStyle] ?? item.fontStyle} />}
+          {item.yarnColors.length > 0 && <Row label="Yarn color(s)" value={item.yarnColors.join(", ")} />}
+        </>
+      )}
+      {item.size && <Row label="Size" value={item.size} />}
+      {item.romperStyle && <Row label="Romper style" value={item.romperStyle === "ruffled" ? "Ruffled" : "Non-Ruffled"} />}
+      {item.itemColor && <Row label={item.romperStyle || item.itemType === "blanket-cotton" ? "Color" : "Sweater color"} value={item.itemColor} />}
+      {item.referenceImageName && <Row label="Reference image" value={item.referenceImageName} />}
+      {item.notes && <Row label="Notes" value={item.notes} />}
     </div>
   );
 }
@@ -55,44 +73,24 @@ export default function StepReview({ formData, onSubmit, onBack, submitting, sub
         deposit before starting.
       </p>
 
-      <div className="bg-oat rounded p-6 mb-5 space-y-1">
-        <p className="font-sans text-xs font-medium tracking-widest text-muted uppercase mb-3">
-          Your Order
-        </p>
-        <Row label="Item" value={itemLabels[formData.itemType] ?? formData.itemType} />
-        {formData.itemType === "custom" ? (
-          <Row label="Description" value={formData.inquiryDescription} />
-        ) : (
-          <>
-            {formData.specialtyDesign && (
-              <Row label="Specialty design" value={specialtyDesignLabels[formData.specialtyDesign] ?? formData.specialtyDesign} />
-            )}
-            <Row label={formData.specialtyDesign ? "Letter" : "Wording"} value={`"${formData.wording}"`} />
-            <Row label="Font" value={fontLabels[formData.fontStyle] ?? formData.fontStyle} />
-            <Row label="Yarn color(s)" value={formData.yarnColors.join(", ")} />
-          </>
-        )}
-        <Row label="Size" value={formData.size} />
-        {formData.romperStyle && <Row label="Romper style" value={formData.romperStyle === "ruffled" ? "Ruffled" : "Non-Ruffled"} />}
-        {formData.itemColor && <Row label={formData.romperStyle || formData.itemType === "blanket-cotton" ? "Color" : "Sweater color"} value={formData.itemColor} />}
-        {formData.referenceImageName && (
-          <Row label="Reference image" value={formData.referenceImageName} />
-        )}
-        {formData.notes && <Row label="Notes" value={formData.notes} />}
+      {formData.cart.map((item, i) => (
+        <ItemSummary key={i} item={item} index={i} total={formData.cart.length} />
+      ))}
+
+      <div className="bg-oat rounded p-5 mb-4">
+        <p className="font-sans text-xs font-medium tracking-widest text-muted uppercase mb-3">Delivery</p>
         <Row
-          label="Delivery"
+          label="Method"
           value={
             formData.delivery === "shipping"
               ? `Ship to ${formData.shippingAddress}, ${formData.shippingCity}, ${formData.shippingState} ${formData.shippingZip}`
-              : "Local pickup - Spokane, WA"
+              : "Local pickup — Spokane, WA"
           }
         />
       </div>
 
-      <div className="bg-oat rounded p-6 mb-6">
-        <p className="font-sans text-xs font-medium tracking-widest text-muted uppercase mb-3">
-          Contact
-        </p>
+      <div className="bg-oat rounded p-5 mb-6">
+        <p className="font-sans text-xs font-medium tracking-widest text-muted uppercase mb-3">Contact</p>
         <Row label="Name" value={`${formData.firstName} ${formData.lastName}`} />
         <Row label="Email" value={formData.email} />
         <Row label="Phone" value={formData.phone} />
@@ -101,9 +99,7 @@ export default function StepReview({ formData, onSubmit, onBack, submitting, sub
           value={
             formData.preferredContact === "instagram"
               ? `Instagram DM (@${formData.instagramHandle})`
-              : formData.preferredContact === "email"
-              ? "Email"
-              : "Phone"
+              : formData.preferredContact === "email" ? "Email" : "Phone"
           }
         />
       </div>
@@ -117,6 +113,9 @@ export default function StepReview({ formData, onSubmit, onBack, submitting, sub
         </p>
       </div>
 
+      {submitError && (
+        <p className="font-sans text-xs text-rose mb-3">{submitError}</p>
+      )}
       <div className="flex gap-3">
         <button
           onClick={onBack}
@@ -124,9 +123,6 @@ export default function StepReview({ formData, onSubmit, onBack, submitting, sub
         >
           Back
         </button>
-        {submitError && (
-          <p className="font-sans text-xs text-rose w-full mb-1">{submitError}</p>
-        )}
         <button
           onClick={onSubmit}
           disabled={submitting}

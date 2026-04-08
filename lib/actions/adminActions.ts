@@ -80,6 +80,7 @@ export async function createManualOrder(data: {
     preferred_contact: data.preferred_contact,
     instagram_handle: data.instagram_handle,
     item_type: data.item_type,
+    items: null,
     specialty_design: "",
     wording: data.wording,
     font_style: "",

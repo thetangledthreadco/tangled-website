@@ -43,8 +43,19 @@ async function getInstagramFeed(): Promise<BeholdPost[]> {
   }
 }
 
+const staticPhotos = [
+  "IMG_1024.jpeg", "IMG_1003.jpeg", "IMG_1497.jpeg", "IMG_1499.jpeg",
+  "IMG_1504.jpeg", "IMG_1748.jpeg", "IMG_1957.jpeg", "IMG_2450.jpeg",
+  "IMG_2818.jpeg", "IMG_2824.jpeg", "IMG_3015.jpeg", "IMG_3017.jpeg",
+  "IMG_3557.jpeg", "IMG_3562.jpeg", "IMG_3727.jpeg", "IMG_3983.jpeg",
+  "IMG_4197.jpeg", "IMG_8057.jpeg", "IMG_8077.jpeg", "IMG_8286.jpeg",
+  "IMG_8520.jpeg", "IMG_8666.jpeg", "IMG_8815.jpeg", "IMG_9394.jpeg",
+  "IMG_9528.jpeg", "IMG_9530.jpeg",
+];
+
 export default async function GalleryPage() {
   const posts = await getInstagramFeed();
+  const igPosts = posts.slice(0, 6);
 
   return (
     <>
@@ -63,11 +74,11 @@ export default async function GalleryPage() {
       {/* Grid */}
       <section className="w-full px-6 md:px-12 py-16 md:py-24 bg-oat">
         <div className="max-w-6xl mx-auto">
-          {posts.length === 0 ? (
-            <p className="font-sans text-sm text-muted">No posts to show right now.</p>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
-              {posts.map((post) => (
+
+          {/* Instagram — top 6 */}
+          {igPosts.length > 0 && (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-3 md:mb-4">
+              {igPosts.map((post) => (
                 <a
                   key={post.id}
                   href={post.permalink}
@@ -86,6 +97,24 @@ export default async function GalleryPage() {
               ))}
             </div>
           )}
+
+          {/* Static portfolio photos */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+            {staticPhotos.map((filename) => (
+              <div
+                key={filename}
+                className="group relative overflow-hidden aspect-square bg-border"
+              >
+                <Image
+                  src={`/images/portfolio/${filename}`}
+                  alt="Custom embroidery by The Tangled Thread Co."
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 640px) 50vw, 33vw"
+                />
+              </div>
+            ))}
+          </div>
 
           <div className="mt-12 text-center">
             <p className="font-sans text-sm text-muted mb-4">See the full archive on Instagram</p>
