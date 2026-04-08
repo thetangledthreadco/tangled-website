@@ -2,6 +2,7 @@
 
 import { Resend } from "resend";
 import type { OrderFormData } from "@/lib/types";
+import { insertOrder } from "@/lib/db/orders";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -44,6 +45,35 @@ function formatOrder(formData: OrderFormData): string {
 }
 
 export async function sendOrderEmail(formData: OrderFormData, imageBase64: string | null = null) {
+  const orderId = crypto.randomUUID();
+
+  // 1. Save order to database
+  await insertOrder({
+    id: orderId,
+    first_name: formData.firstName,
+    last_name: formData.lastName,
+    email: formData.email,
+    phone: formData.phone,
+    preferred_contact: formData.preferredContact,
+    instagram_handle: formData.instagramHandle,
+    item_type: formData.itemType,
+    specialty_design: formData.specialtyDesign,
+    wording: formData.wording,
+    font_style: formData.fontStyle,
+    yarn_colors: formData.yarnColors,
+    inquiry_description: formData.inquiryDescription,
+    size: formData.size,
+    item_color: formData.itemColor,
+    romper_style: formData.romperStyle,
+    notes: formData.notes,
+    delivery: formData.delivery,
+    shipping_address: formData.shippingAddress,
+    shipping_city: formData.shippingCity,
+    shipping_state: formData.shippingState,
+    shipping_zip: formData.shippingZip,
+  });
+
+  // 3. Send emails
   const orderSummary = formatOrder(formData);
   const customerName = formData.firstName;
 
