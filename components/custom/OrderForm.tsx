@@ -108,6 +108,13 @@ export default function OrderForm() {
     }
   }, []);
 
+  // If somehow on the cart step with nothing in it, go back to step 1
+  useEffect(() => {
+    if (restored && step === 5 && formData.cart.length === 0) {
+      setStep(1);
+    }
+  }, [restored, step, formData.cart.length]);
+
   // Save to localStorage
   useEffect(() => {
     if (!restored) return;
@@ -323,7 +330,10 @@ export default function OrderForm() {
       {step === 2 && <StepCustomize formData={formData} onChange={update} onNext={next} onBack={back} />}
       {step === 3 && <StepOptions formData={formData} onChange={update} onNext={next} onBack={back} />}
       {step === 4 && <StepUpload formData={formData} onChange={update} onNext={next} onBack={back} isEditing={isEditing} />}
-      {step === 5 && (
+      {step === 5 && formData.cart.length === 0 && (
+        <StepItemType formData={formData} onChange={update} onNext={next} />
+      )}
+      {step === 5 && formData.cart.length > 0 && (
         <StepCart
           formData={formData}
           onAddAnother={addAnotherItem}
