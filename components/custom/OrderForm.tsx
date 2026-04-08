@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { OrderFormData } from "@/lib/types";
 import { INITIAL_FORM_DATA } from "@/lib/types";
 import { sendOrderEmail } from "@/lib/actions/sendOrderEmail";
@@ -24,13 +24,76 @@ const STEP_LABELS = [
   "Review",
 ];
 
+const STORAGE_KEY = "ttc_order_form";
+const STORAGE_IMAGE_KEY = "ttc_order_image";
+
+function clearStorage() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(STORAGE_IMAGE_KEY);
+  } catch {}
+}
+
 export default function OrderForm() {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [formData, setFormData] = useState<OrderFormData>(INITIAL_FORM_DATA);
+  const [restored, setRestored] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
+
+  // Restore from localStorage on mount
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (!stored) { setRestored(true); return; }
+      const { step: savedStep, formData: savedFormData } = JSON.parse(stored);
+      setStep(savedStep ?? 1);
+
+      const imageDataUrl = localStorage.getItem(STORAGE_IMAGE_KEY);
+      if (imageDataUrl && savedFormData.referenceImageName) {
+        fetch(imageDataUrl)
+          .then((r) => r.blob())
+          .then((blob) => {
+            const file = new File([blob], savedFormData.referenceImageName, { type: blob.type });
+            setFormData({ ...INITIAL_FORM_DATA, ...savedFormData, referenceImageFile: file });
+          })
+          .catch(() => {
+            setFormData({ ...INITIAL_FORM_DATA, ...savedFormData, referenceImageFile: null, referenceImageName: "" });
+          })
+          .finally(() => setRestored(true));
+      } else {
+        setFormData({ ...INITIAL_FORM_DATA, ...savedFormData, referenceImageFile: null, referenceImageName: "" });
+        setRestored(true);
+      }
+    } catch {
+      setRestored(true);
+    }
+  }, []);
+
+  // Save form data to localStorage (skip until after restore)
+  useEffect(() => {
+    if (!restored) return;
+    try {
+      const { referenceImageFile, ...serializable } = formData;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ step, formData: serializable }));
+    } catch {}
+  }, [step, formData, restored]);
+
+  // Save image to localStorage whenever it changes
+  useEffect(() => {
+    if (!restored) return;
+    if (!formData.referenceImageFile) {
+      try { localStorage.removeItem(STORAGE_IMAGE_KEY); } catch {}
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      try { localStorage.setItem(STORAGE_IMAGE_KEY, reader.result as string); } catch {}
+    };
+    reader.readAsDataURL(formData.referenceImageFile);
+  }, [formData.referenceImageFile, restored]);
 
   const update = (data: Partial<OrderFormData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
@@ -47,10 +110,18 @@ export default function OrderForm() {
     try {
       let imageBase64: string | null = null;
       if (formData.referenceImageFile) {
-        const buffer = await formData.referenceImageFile.arrayBuffer();
-        imageBase64 = Buffer.from(buffer).toString("base64");
+        imageBase64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const dataUrl = reader.result as string;
+            resolve(dataUrl.split(",")[1]);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(formData.referenceImageFile!);
+        });
       }
       await sendOrderEmail(formData, imageBase64);
+      clearStorage();
       scrollToTop();
       setSubmitted(true);
     } catch {

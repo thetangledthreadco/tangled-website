@@ -3,7 +3,46 @@
 import { useRef, useState } from "react";
 
 const MAX_FILE_SIZE_MB = 10;
+const MAX_DIMENSION = 1600;
+const JPEG_QUALITY = 0.85;
+
 import type { OrderFormData } from "@/lib/types";
+
+async function compressImage(file: File): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let { width, height } = img;
+      if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+        if (width >= height) {
+          height = Math.round((height * MAX_DIMENSION) / width);
+          width = MAX_DIMENSION;
+        } else {
+          width = Math.round((width * MAX_DIMENSION) / height);
+          height = MAX_DIMENSION;
+        }
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) { reject(new Error("Compression failed")); return; }
+          const name = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+          resolve(new File([blob], name, { type: "image/jpeg" }));
+        },
+        "image/jpeg",
+        JPEG_QUALITY
+      );
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
 
 interface StepUploadProps {
   formData: OrderFormData;
@@ -15,19 +54,27 @@ interface StepUploadProps {
 export default function StepUpload({ formData, onChange, onNext, onBack }: StepUploadProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [fileError, setFileError] = useState("");
+  const [compressing, setCompressing] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
-    if (file && file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      setFileError(`Image must be under ${MAX_FILE_SIZE_MB}MB. Please compress or resize it first.`);
+    if (!file) return;
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      setFileError(`Image must be under ${MAX_FILE_SIZE_MB}MB.`);
       if (fileRef.current) fileRef.current.value = "";
       return;
     }
     setFileError("");
-    onChange({
-      referenceImageFile: file,
-      referenceImageName: file?.name ?? "",
-    });
+    setCompressing(true);
+    try {
+      const compressed = await compressImage(file);
+      onChange({ referenceImageFile: compressed, referenceImageName: compressed.name });
+    } catch {
+      setFileError("Could not process image. Please try a different file.");
+      if (fileRef.current) fileRef.current.value = "";
+    } finally {
+      setCompressing(false);
+    }
   };
 
   return (
@@ -60,7 +107,12 @@ export default function StepUpload({ formData, onChange, onNext, onBack }: StepU
             className="hidden"
             onChange={handleFileChange}
           />
-          {formData.referenceImageName ? (
+          {compressing ? (
+            <>
+              <span className="text-2xl mb-2 animate-pulse">⋯</span>
+              <p className="font-sans text-sm text-muted">Processing image…</p>
+            </>
+          ) : formData.referenceImageName ? (
             <>
               <span className="text-2xl mb-2">✓</span>
               <p className="font-sans text-sm font-medium text-rose">{formData.referenceImageName}</p>
@@ -119,7 +171,8 @@ export default function StepUpload({ formData, onChange, onNext, onBack }: StepU
         </button>
         <button
           onClick={onNext}
-          className="flex-1 px-6 py-3 rounded bg-rose text-warm-white font-sans font-medium text-sm hover:bg-rose-dark transition-colors cursor-pointer"
+          disabled={compressing}
+          className="flex-1 px-6 py-3 rounded bg-rose text-warm-white font-sans font-medium text-sm hover:bg-rose-dark transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
         >
           Continue
         </button>
