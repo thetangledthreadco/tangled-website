@@ -21,7 +21,8 @@ export type OrderStatus =
   | "in_progress"
   | "awaiting_pickup_ship"
   | "ready_to_ship"
-  | "complete";
+  | "complete"
+  | "cancelled";
 
 export const STATUS_LABELS: Record<OrderStatus, string> = {
   new:                  "New",
@@ -32,6 +33,7 @@ export const STATUS_LABELS: Record<OrderStatus, string> = {
   awaiting_pickup_ship: "Awaiting Pickup / Ship",
   ready_to_ship:        "Ready to Ship",
   complete:             "Complete",
+  cancelled:            "Cancelled",
 };
 
 export const STATUS_FLOW: OrderStatus[] = [

@@ -36,7 +36,7 @@ export default function Hero() {
               Sweaters starting at $45.
             </p>
             <Link
-              href="/custom"
+              href="/custom#order"
               className="group/cta inline-flex items-center gap-2 font-sans text-sm font-medium text-brown transition-colors duration-300 hover:text-rose"
             >
               Order Your Custom Piece

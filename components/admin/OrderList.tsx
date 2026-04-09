@@ -18,6 +18,7 @@ const STATUS_COLORS: Partial<Record<OrderStatus, string>> = {
   awaiting_pickup_ship: "bg-purple-50 text-purple-600",
   ready_to_ship:        "bg-purple-50 text-purple-600",
   complete:             "bg-oat text-muted",
+  cancelled:            "bg-red-50 text-red-400",
 };
 
 export default function OrderList({ orders, selectedId, onSelect }: Props) {

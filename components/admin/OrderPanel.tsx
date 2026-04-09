@@ -112,42 +112,69 @@ export default function OrderPanel({ order, onUpdate, onClose }: Props) {
       {/* Status stepper */}
       <section className="mb-6 p-5 bg-warm-white border border-border rounded">
         <p className="font-sans text-xs font-medium tracking-widest text-muted uppercase mb-4">Status</p>
-        <div className="flex items-center gap-3 mb-4">
-          <button
-            disabled={currentIdx <= 0}
-            onClick={() => handleStatusChange(STATUS_FLOW[currentIdx - 1])}
-            className="px-3 py-1.5 rounded border border-border font-sans text-sm text-brown hover:bg-oat disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-          >
-            ← Back
-          </button>
-          <span className="font-sans text-sm font-medium text-ink flex-1 text-center">
-            {STATUS_LABELS[order.status]}
-          </span>
-          <button
-            disabled={currentIdx >= STATUS_FLOW.length - 1}
-            onClick={() => handleStatusChange(STATUS_FLOW[currentIdx + 1])}
-            className="px-3 py-1.5 rounded bg-rose text-warm-white font-sans text-sm hover:bg-rose-dark disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
-          >
-            Next →
-          </button>
-        </div>
-        {/* Step dots — click to jump directly */}
-        <div className="flex gap-1.5 justify-center">
-          {STATUS_FLOW.map((s, i) => (
+
+        {order.status === "cancelled" ? (
+          <div className="flex items-center justify-between">
+            <span className="font-sans text-sm font-medium text-muted italic">Cancelled</span>
             <button
-              key={s}
-              title={STATUS_LABELS[s]}
-              onClick={() => handleStatusChange(s)}
-              className={`w-2.5 h-2.5 rounded-full transition-colors cursor-pointer ${
-                i === currentIdx
-                  ? "bg-rose"
-                  : i < currentIdx
-                  ? "bg-rose/30"
-                  : "bg-border hover:bg-muted/40"
-              }`}
-            />
-          ))}
-        </div>
+              onClick={() => handleStatusChange("new")}
+              className="px-3 py-1.5 rounded border border-border font-sans text-sm text-brown hover:bg-oat transition-colors cursor-pointer"
+            >
+              Restore → New
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center gap-3 mb-4">
+              <button
+                disabled={currentIdx <= 0}
+                onClick={() => handleStatusChange(STATUS_FLOW[currentIdx - 1])}
+                className="px-3 py-1.5 rounded border border-border font-sans text-sm text-brown hover:bg-oat disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              >
+                ← Back
+              </button>
+              <span className="font-sans text-sm font-medium text-ink flex-1 text-center">
+                {STATUS_LABELS[order.status]}
+              </span>
+              <button
+                disabled={currentIdx >= STATUS_FLOW.length - 1}
+                onClick={() => handleStatusChange(STATUS_FLOW[currentIdx + 1])}
+                className="px-3 py-1.5 rounded bg-rose text-warm-white font-sans text-sm hover:bg-rose-dark disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              >
+                Next →
+              </button>
+            </div>
+            {/* Step dots — click to jump directly */}
+            <div className="flex gap-1.5 justify-center mb-4">
+              {STATUS_FLOW.map((s, i) => (
+                <button
+                  key={s}
+                  title={STATUS_LABELS[s]}
+                  onClick={() => handleStatusChange(s)}
+                  className={`w-2.5 h-2.5 rounded-full transition-colors cursor-pointer ${
+                    i === currentIdx
+                      ? "bg-rose"
+                      : i < currentIdx
+                      ? "bg-rose/30"
+                      : "bg-border hover:bg-muted/40"
+                  }`}
+                />
+              ))}
+            </div>
+            <div className="border-t border-border pt-4">
+              <button
+                onClick={() => {
+                  if (window.confirm("Cancel this order? You can restore it to New if needed.")) {
+                    handleStatusChange("cancelled");
+                  }
+                }}
+                className="font-sans text-xs text-muted hover:text-rose transition-colors cursor-pointer"
+              >
+                Cancel order
+              </button>
+            </div>
+          </>
+        )}
       </section>
 
       {/* Tracking flags */}

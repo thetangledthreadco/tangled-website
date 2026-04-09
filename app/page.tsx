@@ -75,7 +75,7 @@ export default async function HomePage() {
           </ol>
           <div className="mt-10">
             <Link
-              href="/custom"
+              href="/custom#order"
               className="group inline-flex items-center gap-2 font-sans text-sm font-medium text-brown hover:text-rose transition-colors"
             >
               Start a custom order
@@ -170,7 +170,7 @@ export default async function HomePage() {
           </div>
           <div className="mt-12 text-center">
             <Link
-              href="/custom"
+              href="/custom#order"
               className="inline-flex items-center justify-center px-8 py-4 bg-rose text-warm-white font-sans font-medium text-sm rounded hover:bg-rose-dark transition-colors"
             >
               Order Your Custom Piece

@@ -256,12 +256,16 @@ export default function CustomPage() {
               Custom Order
             </p>
             <h2 className="font-serif text-4xl text-brown font-light mb-3">
-              Ready when you are.
+              Start your custom order.
             </h2>
-            <p className="font-sans text-sm text-muted leading-relaxed">
-              Fill out the form below — just tell me what you have in mind. I&apos;ll reach
-              out to confirm every detail before I start, and collect the deposit once
-              we&apos;ve got it all sorted.
+            <p className="font-sans text-sm text-muted leading-relaxed mb-4">
+              Tell me what you&apos;re envisioning and I&apos;ll follow up to finalize the design before getting started.
+            </p>
+            <p className="font-sans text-xs text-muted/60">
+              Not sure yet?{" "}
+              <a href="#pricing" className="underline underline-offset-2 hover:text-rose transition-colors">
+                Scroll up to explore pricing and options.
+              </a>
             </p>
           </div>
 
