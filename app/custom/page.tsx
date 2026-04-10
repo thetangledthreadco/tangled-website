@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import OrderForm from "@/components/custom/OrderForm";
+import SweaterConfigurator from "@/components/custom/SweaterConfigurator";
 
 export const metadata: Metadata = {
   title: "Custom Orders",
@@ -177,8 +178,26 @@ export default function CustomPage() {
         </div>
       </section>
 
+      {/* ── Preview configurator ── */}
+      <section className="w-full px-6 md:px-12 py-20 bg-warm-white border-t border-border">
+        <div className="max-w-md mx-auto">
+          <div className="mb-10 text-center">
+            <p className="font-sans text-xs font-medium tracking-widest text-rose uppercase mb-4">
+              Preview
+            </p>
+            <h2 className="font-serif text-4xl text-brown font-light mb-3">
+              See it before you order.
+            </h2>
+            <p className="font-sans text-sm text-muted">
+              Play with colors and fonts to get an idea of how your piece will look.
+            </p>
+          </div>
+          <SweaterConfigurator />
+        </div>
+      </section>
+
       {/* ── Pricing ── */}
-      <section id="pricing" className="w-full px-6 md:px-12 py-20 bg-warm-white border-t border-border">
+      <section id="pricing" className="w-full px-6 md:px-12 py-20 bg-oat border-t border-border">
         <div className="max-w-6xl mx-auto">
           <div className="mb-12">
             <p className="font-sans text-xs font-medium tracking-widest text-rose uppercase mb-4">
