@@ -2,9 +2,17 @@
 
 import { useMemo } from "react";
 import Image from "next/image";
+import { Pacifico } from "next/font/google";
 
-// Preview font: Pacifico (thick script, loaded via next/font/google)
-const PREVIEW_FONT = "var(--font-script), 'Pacifico', cursive";
+// Preview font: Pacifico (thick script). Loaded directly in this component
+// so the className is applied on the span itself. Relying on
+// `var(--font-script)` via the root layout was unreliable on iOS Safari,
+// which would fall through to the `cursive` fallback (Snell Roundhand).
+const pacifico = Pacifico({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 // ── 5-petal daisy SVG ──
 function Daisy({
@@ -107,61 +115,30 @@ export default function SweaterVisualPreview({
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         style={{ paddingBottom: "10%" }}
       >
-        {/* Filter lives on the wrapper, not the span. Applying `filter` to the
-            same element that uses `-webkit-background-clip: text` makes iOS
-            Safari drop the text entirely. */}
-        <div
-          style={
-            yarnSwatch
-              ? {
-                  filter:
-                    "drop-shadow(0 1px 1px rgba(0,0,0,0.15)) contrast(1.05) saturate(1.05)",
-                }
-              : undefined
-          }
+        <span
+          className={`${pacifico.className} relative block text-center transition-all duration-300 ease-out select-none px-4`}
+          style={{
+            fontWeight: 400,
+            fontSize,
+            lineHeight: 1.2,
+            maxWidth: "70%",
+            wordBreak: "break-word" as const,
+            color: yarnColor,
+            textShadow: [
+              `0 -1px 0 rgba(255,255,255,0.25)`,
+              `0 1px 1px rgba(0,0,0,0.2)`,
+              `1px 0 0 ${yarnColor}`,
+              `-1px 0 0 ${yarnColor}`,
+              `0 1px 0 ${yarnColor}`,
+              `0 -1px 0 ${yarnColor}`,
+              `0 2px 3px rgba(0,0,0,0.1)`,
+            ].join(", "),
+            WebkitTextStroke: `0.5px ${yarnColor}`,
+            paintOrder: "stroke fill",
+          }}
         >
-          <span
-            className="relative block text-center transition-all duration-300 ease-out select-none px-4"
-            style={{
-              fontFamily: PREVIEW_FONT,
-              fontWeight: 400,
-              fontSize,
-              lineHeight: 1.2,
-              maxWidth: "70%",
-              wordBreak: "break-word" as const,
-              // Yarn texture fill when swatch available, flat color otherwise
-              ...(yarnSwatch
-                ? {
-                    backgroundImage: `linear-gradient(${yarnColor}66, ${yarnColor}66), url(${yarnSwatch})`,
-                    backgroundSize: "100% 100%, 3px 3px",
-                    backgroundPosition: "center, center",
-                    WebkitBackgroundClip: "text",
-                    backgroundClip: "text",
-                    // iOS Safari needs the -webkit- form explicitly; `color: transparent`
-                    // alone flakes out when combined with background-clip: text.
-                    WebkitTextFillColor: "transparent",
-                    color: "transparent",
-                    WebkitTextStroke: `0.5px rgba(0,0,0,0.15)`,
-                  }
-                : {
-                    color: yarnColor,
-                    textShadow: [
-                      `0 -1px 0 rgba(255,255,255,0.25)`,
-                      `0 1px 1px rgba(0,0,0,0.2)`,
-                      `1px 0 0 ${yarnColor}`,
-                      `-1px 0 0 ${yarnColor}`,
-                      `0 1px 0 ${yarnColor}`,
-                      `0 -1px 0 ${yarnColor}`,
-                      `0 2px 3px rgba(0,0,0,0.1)`,
-                    ].join(", "),
-                    WebkitTextStroke: `0.5px ${yarnColor}`,
-                    paintOrder: "stroke fill",
-                  }),
-            }}
-          >
-            {name || "Name"}
-          </span>
-        </div>
+          {name || "Name"}
+        </span>
       </div>
       {/* Scattered daisies */}
       {showDaisies &&
