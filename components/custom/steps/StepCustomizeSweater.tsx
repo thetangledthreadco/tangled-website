@@ -93,7 +93,7 @@ export default function StepCustomizeSweater({
     <div>
       <h2 className="font-serif text-3xl text-brown mb-2">Customize your sweater</h2>
       <p className="font-sans text-sm text-muted mb-8">
-        Play with the preview until it looks the way you want. Everything below updates live.
+        Play with the preview until it looks the way you want.
       </p>
 
       {/* Sticky visual preview */}

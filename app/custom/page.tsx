@@ -82,9 +82,15 @@ export default function CustomPage() {
               to big kid and adult. Pick the sweater color, try different yarn colors, and see
               the name come to life before you order.
             </p>
-            <p className="font-sans text-sm text-muted/80 leading-relaxed max-w-md mb-10">
+            <p className="font-sans text-sm text-muted/80 leading-relaxed max-w-md mb-5">
               Looking for a romper, blanket, denim jacket, or something else? Just fill out the form
               and I&apos;ll follow up to nail down every detail.
+            </p>
+
+            {/* Subtle urgency line */}
+            <p className="font-sans text-xs text-muted/80 italic mb-10 flex items-center gap-2">
+              <span className="inline-block w-1 h-1 rounded-full bg-rose/60" aria-hidden />
+              Limited spots each week · Made to order.
             </p>
 
             {/* Quick-jump buttons */}
@@ -255,25 +261,21 @@ export default function CustomPage() {
       {/* ── Order form ── */}
       <section id="order" className="w-full px-6 md:px-12 py-20 md:py-28 bg-cream border-t border-border">
         <div className="max-w-2xl mx-auto">
-          <div className="mb-12">
+          <div className="mb-8">
             <p className="font-sans text-xs font-medium tracking-widest text-rose uppercase mb-4">
               Design &amp; Order
             </p>
-            <h2 className="font-serif text-4xl text-brown font-light mb-3">
+            <h2 className="font-serif text-4xl text-brown font-light mb-4">
               Build your piece.
             </h2>
-            <p className="font-sans text-sm text-muted leading-relaxed mb-4">
-              Pick your item to get started. For any sweater (baby, toddler, big kid, or adult),
-              you&apos;ll get a live preview to play with. For everything else, I&apos;ll follow
-              up to finalize the details.
-            </p>
-            <p className="font-sans text-xs text-muted/60">
-              Not sure yet?{" "}
-              <a href="#pricing" className="underline underline-offset-2 hover:text-rose transition-colors">
-                Scroll up to explore pricing and options.
-              </a>
+            <p className="font-sans text-sm text-muted leading-relaxed">
+              Live preview. Your design updates as you customize.
             </p>
           </div>
+
+          <p className="font-sans text-xs text-rose/80 italic text-center mb-4">
+            Start your custom sweater below.
+          </p>
 
           <div className="bg-warm-white p-6 md:p-10 border border-border">
             <OrderForm />
