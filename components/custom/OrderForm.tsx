@@ -7,6 +7,7 @@ import { sendOrderEmail } from "@/lib/actions/sendOrderEmail";
 import StepIndicator from "./StepIndicator";
 import StepItemType from "./steps/StepItemType";
 import StepCustomize from "./steps/StepCustomize";
+import StepCustomizeSweater from "./steps/StepCustomizeSweater";
 import StepOptions from "./steps/StepOptions";
 import StepUpload from "./steps/StepUpload";
 import StepCart from "./steps/StepCart";
@@ -57,6 +58,7 @@ function extractCartItem(formData: OrderFormData): CartItem {
     size: formData.size,
     itemColor: formData.itemColor,
     romperStyle: formData.romperStyle,
+    daisies: formData.daisies,
     referenceImageFile: formData.referenceImageFile,
     referenceImageName: formData.referenceImageName,
     notes: formData.notes,
@@ -258,7 +260,7 @@ export default function OrderForm() {
   }
 
   // Show step indicator for item-config steps (1–4) or checkout steps (6–8)
-  // Hide on cart step (5) to keep it cleaner — it's an interstitial
+  // Hide on cart step (5) to keep it cleaner, it's an interstitial
   const showIndicator = step !== 5;
 
   // For the indicator, show step numbers relative to the full 8-step flow
@@ -269,7 +271,7 @@ export default function OrderForm() {
     <div>
       <div ref={topRef} />
 
-      {/* Mini-cart — visible on all steps except the full cart view (step 5) */}
+      {/* Mini-cart: visible on all steps except the full cart view (step 5) */}
       {step !== 5 && formData.cart.length > 0 && (
         <div className="mb-6 border border-border rounded bg-oat overflow-hidden">
           <button
@@ -277,7 +279,7 @@ export default function OrderForm() {
             className="w-full flex items-center justify-between px-4 py-3 cursor-pointer"
           >
             <span className="font-sans text-xs font-medium text-ink">
-              Cart — {formData.cart.length} {formData.cart.length === 1 ? "item" : "items"}
+              Cart · {formData.cart.length} {formData.cart.length === 1 ? "item" : "items"}
             </span>
             <span className="font-sans text-xs text-muted">{cartOpen ? "▲ hide" : "▼ show"}</span>
           </button>
@@ -327,7 +329,12 @@ export default function OrderForm() {
       )}
 
       {step === 1 && <StepItemType formData={formData} onChange={update} onNext={next} />}
-      {step === 2 && <StepCustomize formData={formData} onChange={update} onNext={next} onBack={back} />}
+      {step === 2 && ["baby-toddler-sweater", "big-kid-sweater", "adult-sweater"].includes(formData.itemType) && (
+        <StepCustomizeSweater formData={formData} onChange={update} onNext={next} onBack={back} />
+      )}
+      {step === 2 && !["baby-toddler-sweater", "big-kid-sweater", "adult-sweater"].includes(formData.itemType) && (
+        <StepCustomize formData={formData} onChange={update} onNext={next} onBack={back} />
+      )}
       {step === 3 && <StepOptions formData={formData} onChange={update} onNext={next} onBack={back} />}
       {step === 4 && <StepUpload formData={formData} onChange={update} onNext={next} onBack={back} isEditing={isEditing} />}
       {step === 5 && formData.cart.length === 0 && (

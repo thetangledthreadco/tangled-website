@@ -84,7 +84,7 @@ export default function Footer() {
               </li>
               <li>
                 <span className="font-sans text-sm text-muted/50 cursor-not-allowed">
-                  Shop Drops — Coming Soon
+                  Shop Drops · Coming Soon
                 </span>
               </li>
               <li>

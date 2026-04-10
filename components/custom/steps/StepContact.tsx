@@ -161,7 +161,7 @@ export default function StepContact({
                   : "border-border bg-warm-white text-ink hover:border-rose/40 hover:bg-oat"
               }`}
             >
-              {method === "instagram" ? "Instagram DM" : method.charAt(0).toUpperCase() + method.slice(1)}
+              {method === "instagram" ? "Instagram DM" : method === "phone" ? "Text" : "Email"}
             </button>
           ))}
         </div>

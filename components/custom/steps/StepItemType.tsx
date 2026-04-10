@@ -11,11 +11,12 @@ const items: {
   label: string;
   desc: string;
   price: string;
+  liveEditorSoon?: boolean;
 }[] = [
   {
     type: "baby-toddler-sweater",
     label: "Baby & Toddler Sweater",
-    desc: "0m – 5T · readily available",
+    desc: "0m - 5T · readily available",
     price: "$45",
   },
   {
@@ -27,7 +28,7 @@ const items: {
   {
     type: "adult-sweater",
     label: "Adult Sweater",
-    desc: "S – XL",
+    desc: "S - XL",
     price: "$55",
   },
   {
@@ -35,12 +36,14 @@ const items: {
     label: "Fine-Gauge Knit Romper",
     desc: "Infant sizes",
     price: "$45",
+    liveEditorSoon: true,
   },
   {
     type: "blanket-cotton",
     label: "Baby Blanket, 100% Cotton",
     desc: "90×70 cm",
     price: "$50",
+    liveEditorSoon: true,
   },
   {
     type: "custom",
@@ -69,7 +72,7 @@ export default function StepItemType({ formData, onChange, onNext }: StepItemTyp
             key={item.type}
             onClick={() => handleSelect(item.type)}
             className={`
-              text-left p-5 rounded border-2 transition-all duration-200 cursor-pointer
+              relative text-left p-5 rounded border-2 transition-all duration-200 cursor-pointer
               ${
                 formData.itemType === item.type
                   ? "border-rose bg-rose/5"
@@ -77,7 +80,12 @@ export default function StepItemType({ formData, onChange, onNext }: StepItemTyp
               }
             `}
           >
-            <span className="font-serif text-base text-brown block leading-snug">
+            {item.liveEditorSoon && (
+              <span className="absolute top-2 right-2 font-sans text-[9px] font-medium tracking-wider uppercase text-rose/80 bg-rose/10 border border-rose/20 px-1.5 py-0.5 rounded">
+                Live editor coming soon
+              </span>
+            )}
+            <span className="font-serif text-base text-brown block leading-snug pr-2">
               {item.label}
             </span>
             <span className="font-sans text-xs text-muted block mt-1">{item.desc}</span>

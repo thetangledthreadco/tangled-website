@@ -83,7 +83,7 @@ export default function ReviewsClient({ initialReviews }: { initialReviews: Revi
           {submitted ? (
             <div className="py-6 bg-warm-white border border-border rounded p-6">
               <p className="font-serif text-2xl text-brown mb-2">Thank you for leaving a review!</p>
-              <p className="font-sans text-sm text-muted mb-4">Enjoy $5 off your next order — just mention this code to me before placing your order:</p>
+              <p className="font-sans text-sm text-muted mb-4">Enjoy $5 off your next order, just mention this code to me before placing your order:</p>
               <span className="inline-block font-sans font-medium text-sm tracking-widest text-rose border border-rose/30 bg-rose/5 px-4 py-2 rounded">REVIEW5</span>
             </div>
           ) : (

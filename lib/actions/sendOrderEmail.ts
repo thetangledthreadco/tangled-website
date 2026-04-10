@@ -43,6 +43,7 @@ function formatItem(item: CartItem | CartItemRecord, index: number, total: numbe
     item.itemType !== "custom" && item.yarnColors.length
       ? `  Yarn colors: ${item.yarnColors.join(", ")}`
       : null,
+    item.itemType !== "custom" && item.daisies ? `  Daisies: Yes` : null,
     item.size ? `  Size: ${item.size}` : null,
     item.romperStyle
       ? `  Romper style: ${item.romperStyle === "ruffled" ? "Ruffled" : "Non-Ruffled"}`
@@ -74,11 +75,12 @@ export async function sendOrderEmail(
     size: item.size,
     itemColor: item.itemColor,
     romperStyle: item.romperStyle,
+    daisies: item.daisies,
     referenceImageName: item.referenceImageName,
     notes: item.notes,
   }));
 
-  // Save to DB — flat columns use first item for backward compat
+  // Save to DB: flat columns use first item for backward compat
   await insertOrder({
     id: orderId,
     first_name: formData.firstName,
@@ -110,19 +112,19 @@ export async function sendOrderEmail(
   const deliveryLine =
     formData.delivery === "shipping"
       ? `Ship to ${formData.shippingAddress}, ${formData.shippingCity}, ${formData.shippingState} ${formData.shippingZip}`
-      : "Local pickup — Spokane, WA";
+      : "Local pickup, Spokane, WA";
 
   const preferredContactLine =
     formData.preferredContact === "instagram"
       ? `Preferred contact: Instagram DM (@${formData.instagramHandle})`
-      : `Preferred contact: ${formData.preferredContact === "email" ? "Email" : "Phone"}`;
+      : `Preferred contact: ${formData.preferredContact === "email" ? "Email" : "Text"}`;
 
   const attachments = itemImages
     .filter((img): img is { filename: string; base64: string } => img !== null)
     .map((img) => ({ filename: img.filename, content: img.base64 }));
 
   const imageSizeNote = imagesFailed
-    ? "\n\n⚠️ Reference images were too large to attach — ask the customer to send them via Instagram DM or email reply."
+    ? "\n\n⚠️ Reference images were too large to attach. Ask the customer to send them via Instagram DM or email reply."
     : "";
 
   await Promise.all([
@@ -147,7 +149,7 @@ export async function sendOrderEmail(
           <img src="https://thetangledthreadco.com/logo.png" alt="The Tangled Thread Co." style="height: 80px; width: auto; margin-bottom: 32px; display: block;" />
           <p style="font-size: 16px; line-height: 1.6; margin: 0 0 16px;">Hi ${formData.firstName},</p>
           <p style="font-size: 16px; line-height: 1.6; margin: 0 0 16px;">Your custom order request came through! I'll review the details and reach out within 1–2 business days to confirm everything and send over your 50% deposit invoice.</p>
-          ${imagesFailed ? `<p style="font-size: 14px; font-family: Arial, sans-serif; line-height: 1.6; background: #FEF3C7; padding: 12px 16px; margin: 0 0 16px;">Your reference images were too large to attach to this email. Holly will follow up to collect them — or feel free to send them via Instagram DM.</p>` : ""}
+          ${imagesFailed ? `<p style="font-size: 14px; font-family: Arial, sans-serif; line-height: 1.6; background: #FEF3C7; padding: 12px 16px; margin: 0 0 16px;">Your reference images were too large to attach to this email. Holly will follow up to collect them, or feel free to send them via Instagram DM.</p>` : ""}
           <p style="font-size: 16px; line-height: 1.6; margin: 0 0 32px;">If you'd like a quicker reply, feel free to DM me on Instagram and I can confirm sooner!</p>
           <div style="background: #F0EBE3; padding: 20px 24px; margin-bottom: 32px;">
             <p style="font-size: 12px; font-family: Arial, sans-serif; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: #6B6560; margin: 0 0 12px;">Your Order</p>

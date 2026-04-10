@@ -127,7 +127,7 @@ export default function NewOrderForm({ onCreated, onCancel }: Props) {
               onChange={(e) => set("preferred_contact", e.target.value)}
               className="w-full px-3 py-2.5 rounded border border-border bg-cream font-sans text-sm text-ink focus:outline-none focus:ring-2 focus:ring-rose/20 focus:border-rose/50 transition-colors"
             >
-              <option value="">—</option>
+              <option value="">Select...</option>
               <option value="email">Email</option>
               <option value="phone">Phone</option>
               <option value="instagram">Instagram</option>

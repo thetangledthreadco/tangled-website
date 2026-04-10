@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import type { OrderFormData, RomperStyle } from "@/lib/types";
 
@@ -23,35 +23,6 @@ const sizesByItem: Record<string, string[]> = {
   "beanie": ["Infant (0-6M)", "Baby (6-18M)", "Toddler (18M-3T)", "Kids (3-6T)"],
 };
 
-// Baby & Toddler sweater colors (0m–5T)
-const babyToddlerSweaterColors = [
-  { id: "lake-blue", label: "Lake Blue", hex: "#5A8AB0" },
-  { id: "chestnut-hearth", label: "Chestnut Hearth", hex: "#6B3820" },
-  { id: "olive-green", label: "Olive Green", hex: "#5A6830" },
-  { id: "lavender", label: "Lavender", hex: "#B8A8D0" },
-  { id: "dusty-violet", label: "Dusty Violet", hex: "#706080" },
-  { id: "rosewood", label: "Rosewood", hex: "#C89090" },
-  { id: "peach-blossom", label: "Peach Blossom", hex: "#E8B8A8" },
-  { id: "oatmilk", label: "Oatmilk", hex: "#EDE0CC" },
-  { id: "soft-white", label: "Soft White", hex: "#F8F4EE" },
-  { id: "vintage-denim", label: "Vintage Denim", hex: "#3A5878" },
-  { id: "sky-blue", label: "Sky Blue", hex: "#A8C8E0" },
-  { id: "cranberry", label: "Cranberry", hex: "#8A1828" },
-];
-
-// Adult & Big Kid sweater colors
-const adultKidSweaterColors = [
-  { id: "black", label: "Black", hex: "#1A1A1A" },
-  { id: "walnut", label: "Walnut", hex: "#7B4A20" },
-  { id: "green", label: "Green", hex: "#1E3D2F" },
-  { id: "orange", label: "Orange", hex: "#C85A20" },
-  { id: "fire-truck-red", label: "Fire Truck Red", hex: "#B81C1C" },
-  { id: "cranberry", label: "Cranberry", hex: "#7A1828" },
-  { id: "white", label: "White", hex: "#F5F2EE" },
-  { id: "khaki", label: "Khaki", hex: "#9E9178" },
-  { id: "rosewood", label: "Rosewood", hex: "#C49090" },
-];
-
 const addOnReference = [
   { label: "Middle name (up to 6 letters)", price: "+$5" },
   { label: "Each extra letter (7+)", price: "+$2 each" },
@@ -59,9 +30,6 @@ const addOnReference = [
   { label: "Medium design", price: "+$5–$10" },
   { label: "Large design", price: "+$10–$15+" },
 ];
-
-const isSweater = (itemType: string) =>
-  ["baby-toddler-sweater", "big-kid-sweater", "adult-sweater"].includes(itemType);
 
 const isFineGaugeRomper = (itemType: string) => itemType === "fine-gauge-romper";
 
@@ -112,16 +80,11 @@ export default function StepOptions({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showColorModal, setShowColorModal] = useState(false);
   const sizes = sizesByItem[formData.itemType] ?? [];
-  const showColorPicker = isSweater(formData.itemType);
   const showRomperStyle = isFineGaugeRomper(formData.itemType);
   const showBlanketColor = isBlanket(formData.itemType);
   const blanketColors = blanketCottonColors;
   const blanketChartSrc = "/images/assets/blanket-colors-cotton.png";
   const isAdultOrKid = ["adult-sweater", "big-kid-sweater"].includes(formData.itemType);
-  const sweaterColors = isAdultOrKid ? adultKidSweaterColors : babyToddlerSweaterColors;
-  const colorChartSrc = isAdultOrKid
-    ? "/images/assets/sweater-colors-adult-kid.jpg"
-    : "/images/assets/sweater-colors.png";
 
   const romperColors = formData.romperStyle === "ruffled"
     ? ruffledRomperColors
@@ -132,22 +95,16 @@ export default function StepOptions({
     ? "/images/assets/romper-colors-ruffled.png"
     : "/images/assets/romper-colors-non-ruffled.png";
 
-  // Clear selected color if it doesn't exist in the current item's color list
-  const validColorIds = new Set(sweaterColors.map((c) => c.id));
-  if (formData.itemColor && showColorPicker && !validColorIds.has(formData.itemColor)) {
-    onChange({ itemColor: "" });
-  }
-
-  // Blankets are one size — auto-set so validation passes
-  if (showBlanketColor && !formData.size) {
-    onChange({ size: "One size" });
-  }
+  // Blankets are one size, auto-set so validation passes
+  useEffect(() => {
+    if (showBlanketColor && !formData.size) {
+      onChange({ size: "One size" });
+    }
+  }, [showBlanketColor, formData.size, onChange]);
 
   const validate = () => {
     const errs: Record<string, string> = {};
     if (!showBlanketColor && !formData.size) errs.size = "Please select a size.";
-    if (showColorPicker && !formData.itemColor)
-      errs.itemColor = "Please select a sweater color.";
     if (showRomperStyle && !formData.romperStyle)
       errs.romperStyle = "Please choose a romper style.";
     if (showRomperStyle && formData.romperStyle && !formData.itemColor)
@@ -162,10 +119,10 @@ export default function StepOptions({
     <div>
       <h2 className="font-serif text-3xl text-brown mb-2">Size &amp; options</h2>
       <p className="font-sans text-sm text-muted mb-8">
-        Choose your size{showColorPicker ? ", sweater color," : ""} and any add-ons.
+        Choose your size and review the add-ons.
       </p>
 
-      {/* Size — hidden for blankets (one size) */}
+      {/* Size, hidden for blankets (one size) */}
       {!showBlanketColor && (
         <div className="mb-8">
           <label
@@ -312,54 +269,6 @@ export default function StepOptions({
         </div>
       )}
 
-      {/* Sweater color (only for sweaters) */}
-      {showColorPicker && (
-        <div className="mb-8">
-          <div className="flex items-start justify-between gap-4 mb-3">
-            <p className="font-sans text-sm font-medium text-ink">
-              Sweater color <span className="text-rose">*</span>
-            </p>
-            <button
-              type="button"
-              onClick={() => setShowColorModal(true)}
-              className="font-sans text-xs text-rose hover:text-rose-dark transition-colors underline underline-offset-2 cursor-pointer shrink-0"
-            >
-              View color chart
-            </button>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            {sweaterColors.map((color) => (
-              <button
-                key={color.id}
-                onClick={() => onChange({ itemColor: color.id })}
-                title={color.label}
-                className="flex flex-col items-center gap-1.5 cursor-pointer group"
-                aria-pressed={formData.itemColor === color.id}
-              >
-                <span
-                  className={`
-                    w-10 h-10 rounded-full border-2 transition-all duration-200 block
-                    ${
-                      formData.itemColor === color.id
-                        ? "border-rose scale-110 shadow-md"
-                        : "border-border group-hover:border-rose/50"
-                    }
-                  `}
-                  style={{ backgroundColor: color.hex }}
-                />
-                <span className="font-sans text-[10px] text-muted text-center w-14 leading-tight">
-                  {color.label}
-                </span>
-              </button>
-            ))}
-          </div>
-          {errors.itemColor && (
-            <p className="font-sans text-xs text-rose mt-2">{errors.itemColor}</p>
-          )}
-          <p className="font-sans text-xs text-muted mt-3">* Subject to availability. I'll confirm when I follow up.</p>
-        </div>
-      )}
-
       {/* Add-ons reference */}
       <div className="mb-10">
         <p className="font-sans text-sm font-medium text-ink mb-1">Add-ons</p>
@@ -374,7 +283,7 @@ export default function StepOptions({
         </div>
       </div>
 
-      {/* Sweater color modal */}
+      {/* Romper/blanket color chart modal */}
       {showColorModal && (
         <div
           className="fixed inset-0 bg-ink/60 z-50 flex items-center justify-center p-6"
@@ -385,7 +294,7 @@ export default function StepOptions({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-serif text-xl text-brown">Sweater color chart</h3>
+              <h3 className="font-serif text-xl text-brown">Color chart</h3>
               <button
                 type="button"
                 onClick={() => setShowColorModal(false)}
@@ -395,7 +304,7 @@ export default function StepOptions({
               </button>
             </div>
             <Image
-              src={showRomperStyle ? romperChartSrc : showBlanketColor ? blanketChartSrc : colorChartSrc}
+              src={showRomperStyle ? romperChartSrc : blanketChartSrc}
               alt="Available colors"
               width={600}
               height={800}

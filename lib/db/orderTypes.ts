@@ -9,6 +9,7 @@ export interface CartItemRecord {
   size: string;
   itemColor: string;
   romperStyle: string;
+  daisies: boolean;
   referenceImageName: string;
   notes: string;
 }
@@ -26,8 +27,8 @@ export type OrderStatus =
 
 export const STATUS_LABELS: Record<OrderStatus, string> = {
   new:                  "New",
-  waiting_deposit:      "Waiting — Deposit",
-  waiting_shipment:     "Waiting — Shipment",
+  waiting_deposit:      "Waiting: Deposit",
+  waiting_shipment:     "Waiting: Shipment",
   ready_to_stitch:      "Ready to Stitch",
   in_progress:          "In Progress",
   awaiting_pickup_ship: "Awaiting Pickup / Ship",

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import type { OrderFormData, FontStyle, SpecialtyDesign } from "@/lib/types";
+import type { OrderFormData, FontStyle } from "@/lib/types";
 
 interface StepCustomizeProps {
   formData: OrderFormData;
@@ -53,8 +53,7 @@ export default function StepCustomize({
     }
   };
 
-  const isLetterDesign = formData.specialtyDesign === "block-letter" || formData.specialtyDesign === "floral-letter";
-  const maxColors = formData.specialtyDesign === "block-letter" ? 1 : formData.specialtyDesign === "floral-letter" ? 5 : MAX_COLORS;
+  const maxColors = MAX_COLORS;
 
   const isCustomInquiry = formData.itemType === "custom";
 
@@ -64,21 +63,14 @@ export default function StepCustomize({
       if (!formData.inquiryDescription.trim()) errs.wording = "Please describe what you have in mind.";
     } else {
       if (!formData.wording.trim()) {
-        errs.wording = isLetterDesign ? "Please enter the letter to embroider." : "Please enter the wording to embroider.";
-      } else if (isLetterDesign && formData.wording.trim().length > 1) {
-        errs.wording = "Block and floral letter designs use a single letter.";
+        errs.wording = "Please enter the wording to embroider.";
       }
-      if (!isLetterDesign && !formData.fontStyle) errs.font = "Please choose a font style.";
+      if (!formData.fontStyle) errs.font = "Please choose a font style.";
       if (formData.yarnColors.length === 0) errs.colors = "Please select at least one yarn color.";
     }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
-
-  const specialtyOptions: { value: SpecialtyDesign; label: string; price: string; desc: string }[] = [
-    { value: "block-letter", label: "Block Letter", price: "$45", desc: "Large decorative block letter" },
-    { value: "floral-letter", label: "Floral Letter", price: "$50", desc: "Letter with floral embellishments" },
-  ];
 
   return (
     <div>
@@ -108,76 +100,38 @@ export default function StepCustomize({
         </div>
       )}
 
-      {/* Specialty design - not shown for blankets or custom inquiries */}
-      {!isCustomInquiry && formData.itemType !== "blanket-cotton" && (
-        <div className="mb-8">
-          <p className="font-sans text-sm font-medium text-ink mb-3">Specialty design <span className="font-normal text-muted">(optional)</span></p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            {specialtyOptions.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                onClick={() => {
-                  const next = formData.specialtyDesign === opt.value ? "" : opt.value;
-                  const colorLimit = next === "block-letter" ? 1 : next === "floral-letter" ? 5 : MAX_COLORS;
-                  onChange({
-                    specialtyDesign: next,
-                    wording: "",
-                    fontStyle: "",
-                    yarnColors: formData.yarnColors.slice(0, colorLimit),
-                  });
-                }}
-                className={`
-                  text-left p-3 rounded border-2 transition-all duration-200 cursor-pointer
-                  ${formData.specialtyDesign === opt.value
-                    ? "border-rose bg-rose/5"
-                    : "border-border bg-warm-white hover:border-rose/40 hover:bg-oat"
-                  }
-                `}
-              >
-                <span className="font-serif text-sm text-brown block">{opt.label}</span>
-                <span className="font-sans text-xs text-muted block">{opt.desc}</span>
-                <span className="font-sans text-xs font-medium text-rose block mt-1">{opt.price}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Wording / Font / Yarn — hidden for custom inquiries */}
+      {/* Wording / Font / Yarn, hidden for custom inquiries */}
       {!isCustomInquiry && (<>
       <div className="mb-8">
         <label htmlFor="wording" className="block font-sans text-sm font-medium text-ink mb-2">
-          {isLetterDesign ? "Letter" : "Wording"} <span className="text-rose">*</span>
+          Wording <span className="text-rose">*</span>
         </label>
         <input
           id="wording"
           type="text"
-          maxLength={isLetterDesign ? 1 : MAX_WORDING_LENGTH}
+          maxLength={MAX_WORDING_LENGTH}
           value={formData.wording}
           onChange={(e) => {
             onChange({ wording: e.target.value });
             if (errors.wording) setErrors((prev) => ({ ...prev, wording: undefined }));
           }}
-          placeholder={isLetterDesign ? "e.g. E" : 'e.g. Emma, baby girl, The Smiths, "brave little one"…'}
+          placeholder={'e.g. Emma, baby girl, The Smiths, "brave little one"…'}
           className={`
             w-full px-4 py-3 rounded border bg-warm-white font-sans text-base text-ink
             placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-rose/20 transition-colors
             ${errors.wording ? "border-rose" : "border-border focus:border-rose/50"}
           `}
         />
-        {!isLetterDesign && (
-          <p className="font-sans text-xs text-muted mt-1.5">
-            Capitalization matters. &lsquo;Emma&rsquo; vs &lsquo;emma&rsquo; will be stitched as written.
-            {" "}
-            <span className="text-ink/60">{formData.wording.length}/{MAX_WORDING_LENGTH}</span>
-          </p>
-        )}
+        <p className="font-sans text-xs text-muted mt-1.5">
+          Capitalization matters. &lsquo;Emma&rsquo; vs &lsquo;emma&rsquo; will be stitched as written.
+          {" "}
+          <span className="text-ink/60">{formData.wording.length}/{MAX_WORDING_LENGTH}</span>
+        </p>
         {errors.wording && <p className="font-sans text-xs text-rose mt-1">{errors.wording}</p>}
       </div>
 
       {/* Font style */}
-      {!isLetterDesign && <div className="mb-8">
+      <div className="mb-8">
         <div className="flex items-center justify-between mb-3">
           <p className="font-sans text-sm font-medium text-ink">
             Font style <span className="text-rose">*</span>
@@ -212,7 +166,7 @@ export default function StepCustomize({
           ))}
         </div>
         {errors.font && <p className="font-sans text-xs text-rose mt-2">{errors.font}</p>}
-      </div>}
+      </div>
 
       {/* Yarn colors */}
       <div className="mb-8">
@@ -229,11 +183,9 @@ export default function StepCustomize({
             View color charts
           </button>
         </div>
-        {!isLetterDesign && (
-          <p className="font-sans text-xs text-muted mb-3">
-            Need more than 3 colors or have a very custom design? Pick your closest matches and add a note in the personalization field. We&rsquo;ll finalize the details in follow-up.
-          </p>
-        )}
+        <p className="font-sans text-xs text-muted mb-3">
+          Need more than 3 colors or have a very custom design? Pick your closest matches and add a note in the personalization field. We&rsquo;ll finalize the details in follow-up.
+        </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {yarnColors.map((color) => {

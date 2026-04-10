@@ -35,6 +35,7 @@ export interface CartItem {
   size: string;
   itemColor: string;
   romperStyle: RomperStyle;
+  daisies: boolean;
   referenceImageFile: File | null;
   referenceImageName: string;
   notes: string;
@@ -50,6 +51,7 @@ export const EMPTY_CART_ITEM: CartItem = {
   size: "",
   itemColor: "",
   romperStyle: "",
+  daisies: false,
   referenceImageFile: null,
   referenceImageName: "",
   notes: "",

@@ -22,7 +22,7 @@ export default function FinalCTA() {
             disabled
             className="inline-flex items-center justify-center px-8 py-4 border border-warm-white/15 text-warm-white/40 font-sans font-medium text-sm rounded tracking-wide cursor-not-allowed"
           >
-            Shop Drops — Coming Soon
+            Shop Drops · Coming Soon
           </button>
         </div>
       </div>

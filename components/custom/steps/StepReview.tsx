@@ -22,11 +22,6 @@ const fontLabels: Record<string, string> = {
   "font-5": "Font 5", "font-6": "Font 6", "font-7": "Font 7", "font-8": "Font 8",
 };
 
-const specialtyLabels: Record<string, string> = {
-  "block-letter": "Block Letter",
-  "floral-letter": "Floral Letter",
-};
-
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between py-2.5 border-b border-border last:border-0">
@@ -47,12 +42,10 @@ function ItemSummary({ item, index, total }: { item: CartItem; index: number; to
         <Row label="Description" value={item.inquiryDescription} />
       ) : (
         <>
-          {item.specialtyDesign && (
-            <Row label="Specialty design" value={specialtyLabels[item.specialtyDesign] ?? item.specialtyDesign} />
-          )}
-          <Row label={item.specialtyDesign ? "Letter" : "Wording"} value={`"${item.wording}"`} />
+          <Row label="Wording" value={`"${item.wording}"`} />
           {item.fontStyle && <Row label="Font" value={fontLabels[item.fontStyle] ?? item.fontStyle} />}
           {item.yarnColors.length > 0 && <Row label="Yarn color(s)" value={item.yarnColors.join(", ")} />}
+          {item.daisies && <Row label="Daisies" value="Yes" />}
         </>
       )}
       {item.size && <Row label="Size" value={item.size} />}
@@ -84,7 +77,7 @@ export default function StepReview({ formData, onSubmit, onBack, submitting, sub
           value={
             formData.delivery === "shipping"
               ? `Ship to ${formData.shippingAddress}, ${formData.shippingCity}, ${formData.shippingState} ${formData.shippingZip}`
-              : "Local pickup — Spokane, WA"
+              : "Local pickup, Spokane, WA"
           }
         />
       </div>
@@ -99,7 +92,7 @@ export default function StepReview({ formData, onSubmit, onBack, submitting, sub
           value={
             formData.preferredContact === "instagram"
               ? `Instagram DM (@${formData.instagramHandle})`
-              : formData.preferredContact === "email" ? "Email" : "Phone"
+              : formData.preferredContact === "email" ? "Email" : "Text"
           }
         />
       </div>

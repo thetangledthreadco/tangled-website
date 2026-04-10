@@ -75,7 +75,7 @@ export default async function GalleryPage() {
       <section className="w-full px-6 md:px-12 py-16 md:py-24 bg-oat">
         <div className="max-w-6xl mx-auto">
 
-          {/* Instagram — top 6 */}
+          {/* Instagram: top 6 */}
           {igPosts.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4 mb-3 md:mb-4">
               {igPosts.map((post) => (

@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import OrderForm from "@/components/custom/OrderForm";
-import SweaterConfigurator from "@/components/custom/SweaterConfigurator";
 
 export const metadata: Metadata = {
   title: "Custom Orders",
   description:
-    "Order a custom hand-embroidered piece — sweaters, rompers, blankets, denim, and more. Made just for you in Spokane, WA.",
+    "Design a custom hand-embroidered sweater with a live preview. Baby, toddler, big kid, and adult sizes. Plus rompers, blankets, denim, and more. Made just for you in Spokane, WA.",
 };
 
 const pricingItems = [
@@ -33,12 +32,12 @@ const steps = [
   {
     n: "01",
     title: "Fill out the form",
-    body: "Tell me what you want stitched — the item, your wording, colors, and any notes. Don't worry if you're not sure on every detail yet.",
+    body: "Tell me what you want stitched: the item, your wording, colors, and any notes. Don't worry if you're not sure on every detail yet.",
   },
   {
     n: "02",
     title: "I follow up personally",
-    body: "I reach out within 1–2 business days to confirm your design — placement, yarn colors, font choice, and anything else we need to sort out.",
+    body: "I reach out within 1-2 business days to confirm your design: placement, yarn colors, font choice, and anything else we need to sort out.",
   },
   {
     n: "03",
@@ -60,7 +59,7 @@ const itemCategories = [
   { label: "Baby Blankets", detail: "100% Cotton" },
   { label: "Denim Jackets", detail: "Kids & adult" },
   { label: "Beanies", detail: "Infant through adult" },
-  { label: "Something else?", detail: "Name baskets, pillow cases, tote bags, backpacks, denim jackets — if it can be stitched, let's talk" },
+  { label: "Something else?", detail: "Name baskets, pillow cases, tote bags, backpacks, denim jackets. If it can be stitched, let's talk" },
 ];
 
 export default function CustomPage() {
@@ -76,16 +75,26 @@ export default function CustomPage() {
               Custom Embroidery · Spokane, WA
             </p>
             <h1 className="font-serif text-5xl md:text-6xl text-brown font-light leading-tight mb-6">
-              Tell me what<br className="hidden sm:block" /> to stitch.
+              Design it,<br className="hidden sm:block" /> then stitch it.
             </h1>
-            <p className="font-sans text-base text-muted leading-relaxed max-w-md mb-10">
-              Hand-embroidered pieces made just for you — sweaters, rompers, blankets, denim, and more.
-              Fill out the form with what you have in mind, I&apos;ll follow up to confirm every detail,
-              and then I get to stitching.
+            <p className="font-sans text-base text-muted leading-relaxed max-w-md mb-6">
+              Customize a sweater with our live preview, from baby and toddler all the way up
+              to big kid and adult. Pick the sweater color, try different yarn colors, and see
+              the name come to life before you order.
+            </p>
+            <p className="font-sans text-sm text-muted/80 leading-relaxed max-w-md mb-10">
+              Looking for a romper, blanket, denim jacket, or something else? Just fill out the form
+              and I&apos;ll follow up to nail down every detail.
             </p>
 
             {/* Quick-jump buttons */}
             <div className="flex flex-wrap gap-3">
+              <a
+                href="#order"
+                className="px-5 py-2.5 rounded bg-rose text-warm-white font-sans text-sm hover:bg-rose-dark transition-colors"
+              >
+                Start designing
+              </a>
               <a
                 href="#items"
                 className="px-5 py-2.5 rounded border border-border bg-warm-white font-sans text-sm text-brown hover:bg-oat hover:border-rose/30 transition-colors"
@@ -98,12 +107,6 @@ export default function CustomPage() {
               >
                 Pricing
               </a>
-              <a
-                href="#order"
-                className="px-5 py-2.5 rounded bg-rose text-warm-white font-sans text-sm hover:bg-rose-dark transition-colors"
-              >
-                Place your order
-              </a>
             </div>
           </div>
 
@@ -111,7 +114,7 @@ export default function CustomPage() {
           <div className="relative aspect-[3/4] overflow-hidden rounded-sm">
             <Image
               src="/images/portfolio/portfolio-flatlay.jpeg"
-              alt="Custom embroidered sweaters laid flat — Lily, Karis, Isabella, Penny Mabel, and more"
+              alt="Custom embroidered sweaters laid flat: Lily, Karis, Isabella, Penny Mabel, and more"
               fill
               className="object-cover object-center"
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -156,7 +159,7 @@ export default function CustomPage() {
               Customizable Pieces
             </h2>
             <p className="font-sans text-sm text-muted max-w-lg">
-              Don&apos;t see what you&apos;re looking for? Fill out the form and describe it — if it can be stitched, I&apos;ll make it work.
+              Don&apos;t see what you&apos;re looking for? Fill out the form and describe it. If it can be stitched, I&apos;ll make it work.
             </p>
           </div>
 
@@ -175,24 +178,6 @@ export default function CustomPage() {
             Most colors are available in 0–3m through 5T. If a specific color/size combo
             needs to be ordered in, allow an extra ~3 weeks.
           </p>
-        </div>
-      </section>
-
-      {/* ── Preview configurator ── */}
-      <section className="w-full px-6 md:px-12 py-20 bg-warm-white border-t border-border">
-        <div className="max-w-md mx-auto">
-          <div className="mb-10 text-center">
-            <p className="font-sans text-xs font-medium tracking-widest text-rose uppercase mb-4">
-              Preview
-            </p>
-            <h2 className="font-serif text-4xl text-brown font-light mb-3">
-              See it before you order.
-            </h2>
-            <p className="font-sans text-sm text-muted">
-              Play with colors and fonts to get an idea of how your piece will look.
-            </p>
-          </div>
-          <SweaterConfigurator />
         </div>
       </section>
 
@@ -255,7 +240,7 @@ export default function CustomPage() {
           <div className="flex flex-col sm:flex-row gap-6 sm:gap-12">
             {[
               { label: "Shipping", value: "$8–$10 flat rate, or free local pickup in Spokane" },
-              { label: "Turnaround", value: "Varies by season — ask when you fill out the form and I'll give you a current estimate" },
+              { label: "Turnaround", value: "Varies by season. Ask when you fill out the form and I'll give you a current estimate" },
               { label: "Deposit", value: "50% upfront once details are confirmed, remaining balance before pickup or shipping" },
             ].map(({ label, value }) => (
               <div key={label} className="flex-1">
@@ -272,13 +257,15 @@ export default function CustomPage() {
         <div className="max-w-2xl mx-auto">
           <div className="mb-12">
             <p className="font-sans text-xs font-medium tracking-widest text-rose uppercase mb-4">
-              Custom Order
+              Design &amp; Order
             </p>
             <h2 className="font-serif text-4xl text-brown font-light mb-3">
-              Start your custom order.
+              Build your piece.
             </h2>
             <p className="font-sans text-sm text-muted leading-relaxed mb-4">
-              Tell me what you&apos;re envisioning and I&apos;ll follow up to finalize the design before getting started.
+              Pick your item to get started. For any sweater (baby, toddler, big kid, or adult),
+              you&apos;ll get a live preview to play with. For everything else, I&apos;ll follow
+              up to finalize the details.
             </p>
             <p className="font-sans text-xs text-muted/60">
               Not sure yet?{" "}

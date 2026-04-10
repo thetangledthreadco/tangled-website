@@ -61,9 +61,9 @@ export default function OrderPanel({ order, onUpdate, onClose }: Props) {
     order.preferred_contact === "instagram"
       ? `Instagram @${order.instagram_handle}`
       : order.preferred_contact === "email"
-      ? `Email — ${order.email}`
+      ? `Email: ${order.email}`
       : order.preferred_contact === "phone"
-      ? `Phone — ${order.phone}`
+      ? `Text: ${order.phone}`
       : order.preferred_contact;
 
   const detailRows: Array<[string, string] | null> = [
@@ -78,7 +78,7 @@ export default function OrderPanel({ order, onUpdate, onClose }: Props) {
     order.item_color ? ["Item color", order.item_color] : null,
     order.romper_style ? ["Romper style", order.romper_style === "ruffled" ? "Ruffled" : "Non-Ruffled"] : null,
     order.notes ? ["Customer notes", order.notes] : null,
-    ["Delivery", order.delivery === "shipping" ? "Ship" : "Local pickup — Spokane, WA"],
+    ["Delivery", order.delivery === "shipping" ? "Ship" : "Local pickup, Spokane, WA"],
     order.delivery === "shipping"
       ? ["Ship to", `${order.shipping_address}, ${order.shipping_city}, ${order.shipping_state} ${order.shipping_zip}`]
       : null,
@@ -144,7 +144,7 @@ export default function OrderPanel({ order, onUpdate, onClose }: Props) {
                 Next →
               </button>
             </div>
-            {/* Step dots — click to jump directly */}
+            {/* Step dots: click to jump directly */}
             <div className="flex gap-1.5 justify-center mb-4">
               {STATUS_FLOW.map((s, i) => (
                 <button
@@ -256,7 +256,7 @@ export default function OrderPanel({ order, onUpdate, onClose }: Props) {
           value={notes}
           onChange={(e) => handleNotesChange(e.target.value)}
           rows={5}
-          placeholder="Notes for yourself — not visible to the customer."
+          placeholder="Notes for yourself. Not visible to the customer."
           className="w-full px-4 py-3 rounded border border-border bg-cream font-sans text-sm text-ink placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-rose/20 resize-none transition-colors"
         />
       </section>

@@ -54,7 +54,7 @@ export default async function HomePage() {
             {[
               {
                 n: "1",
-                text: "Tell me what you'd like stitched — the item, wording, colors, and any ideas you have. Don't worry about having every detail figured out yet.",
+                text: "Tell me what you'd like stitched: the item, wording, colors, and any ideas you have. Don't worry about having every detail figured out yet.",
               },
               {
                 n: "2",
