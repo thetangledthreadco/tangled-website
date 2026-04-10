@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { OrderFormData, CartItem } from "@/lib/types";
 import { INITIAL_FORM_DATA, EMPTY_CART_ITEM } from "@/lib/types";
 import { sendOrderEmail } from "@/lib/actions/sendOrderEmail";
@@ -74,7 +74,7 @@ export default function OrderForm() {
   const [restored, setRestored] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
-  const topRef = useRef<HTMLDivElement>(null);
+  const didMountRef = useRef(false);
 
   // Restore from localStorage on mount
   useEffect(() => {
@@ -145,7 +145,29 @@ export default function OrderForm() {
     setFormData((prev) => ({ ...prev, ...data }));
   };
 
-  const scrollToTop = () => topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  // Scroll the entire form box into view whenever the step changes, after
+  // React commits the new DOM. Doing this synchronously inside the click
+  // handler caused scrollIntoView to target the old layout and land at the
+  // wrong position. Skip the first render so we don't yank the page on mount.
+  // We scroll the outer #order-form-box (owned by the page) so the whole card
+  // — including its top padding and any step-1-only intro — comes into view,
+  // not just the inner content below the header.
+  useEffect(() => {
+    if (!didMountRef.current) {
+      didMountRef.current = true;
+      return;
+    }
+    document.getElementById("order-form-box")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [step]);
+
+  // When the order is submitted the form box unmounts, so fall back to the
+  // outer order section.
+  useEffect(() => {
+    if (submitted) {
+      document.getElementById("order")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [submitted]);
+
   const isCustom = formData.itemType === "custom";
 
   // Add current item to cart (or update if editing) and go to cart step
@@ -161,7 +183,6 @@ export default function OrderForm() {
       update({ ...EMPTY_CART_ITEM, cart: [...formData.cart, item] });
     }
     setStep(5);
-    scrollToTop();
   };
 
   // Start editing a specific cart item by index
@@ -171,13 +192,11 @@ export default function OrderForm() {
     update({ ...item, cart: items });
     setEditingIndex(index);
     setStep(1);
-    scrollToTop();
   };
 
   // From cart: go back (no longer used for edit, kept for back nav from step 5 edge case)
   const backFromCart = () => {
     setStep(4);
-    scrollToTop();
   };
 
   // From cart: reset current item and go to step 1 to configure another
@@ -185,7 +204,6 @@ export default function OrderForm() {
     update(EMPTY_CART_ITEM);
     setEditingIndex(null);
     setStep(1);
-    scrollToTop();
   };
 
   const removeFromCart = (index: number) => {
@@ -206,7 +224,6 @@ export default function OrderForm() {
       // Skip step 3 for custom items; cap at 8
       return Math.min(isCustom && n === 3 ? 4 : n, 8);
     });
-    scrollToTop();
   };
 
   const back = () => {
@@ -215,7 +232,6 @@ export default function OrderForm() {
       const n = s - 1;
       return Math.max(isCustom && n === 3 ? 2 : n, 1);
     });
-    scrollToTop();
   };
 
   const handleSubmit = async () => {
@@ -246,7 +262,6 @@ export default function OrderForm() {
 
       await sendOrderEmail(formData, imagesFailed ? [] : itemImages, imagesFailed);
       clearStorage();
-      scrollToTop();
       setSubmitted(true);
     } catch {
       setSubmitError("Something went wrong submitting your order. Please try again or DM me on Instagram.");
@@ -269,8 +284,6 @@ export default function OrderForm() {
 
   return (
     <div>
-      <div ref={topRef} />
-
       {/* Mini-cart: visible on all steps except the full cart view (step 5) */}
       {step !== 5 && formData.cart.length > 0 && (
         <div className="mb-6 border border-border rounded bg-oat overflow-hidden">
@@ -306,7 +319,7 @@ export default function OrderForm() {
               ))}
               <div className="px-4 py-2.5">
                 <button
-                  onClick={() => { setStep(5); scrollToTop(); setCartOpen(false); }}
+                  onClick={() => { setStep(5); setCartOpen(false); }}
                   className="font-sans text-xs text-rose hover:underline cursor-pointer"
                 >
                   View full cart →
@@ -344,7 +357,7 @@ export default function OrderForm() {
         <StepCart
           formData={formData}
           onAddAnother={addAnotherItem}
-          onPlaceOrder={() => { setStep(6); scrollToTop(); }}
+          onPlaceOrder={() => setStep(6)}
           onRemove={removeFromCart}
           onEdit={startEditItem}
         />

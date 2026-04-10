@@ -265,19 +265,15 @@ export default function CustomPage() {
             <p className="font-sans text-xs font-medium tracking-widest text-rose uppercase mb-4">
               Design &amp; Order
             </p>
-            <h2 className="font-serif text-4xl text-brown font-light mb-4">
-              Build your piece.
+            <h2 className="font-serif text-4xl text-brown font-light">
+              Build Your Order
             </h2>
-            <p className="font-sans text-sm text-muted leading-relaxed">
-              Live preview. Your design updates as you customize.
-            </p>
           </div>
 
-          <p className="font-sans text-xs text-rose/80 italic text-center mb-4">
-            Start your custom sweater below.
-          </p>
-
-          <div className="bg-warm-white p-6 md:p-10 border border-border">
+          <div
+            id="order-form-box"
+            className="bg-warm-white p-6 md:p-10 border border-border scroll-mt-20 md:scroll-mt-24"
+          >
             <OrderForm />
           </div>
         </div>

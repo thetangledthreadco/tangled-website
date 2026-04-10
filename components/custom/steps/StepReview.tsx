@@ -109,6 +109,11 @@ export default function StepReview({ formData, onSubmit, onBack, submitting, sub
       {submitError && (
         <p className="font-sans text-xs text-rose mb-3">{submitError}</p>
       )}
+      <div className="font-sans text-xs text-muted leading-relaxed space-y-1 mb-5">
+        <p>Made to order in ~2 weeks</p>
+        <p>50% deposit to start</p>
+        <p>I&apos;ll message you to confirm all details before stitching</p>
+      </div>
       <div className="flex gap-3">
         <button
           onClick={onBack}
