@@ -2,17 +2,12 @@
 
 import { useMemo } from "react";
 import Image from "next/image";
-import { Pacifico } from "next/font/google";
 
-// Preview font: Pacifico (thick script). Loaded directly in this component
-// so the className is applied on the span itself. Relying on
-// `var(--font-script)` via the root layout was unreliable on iOS Safari,
-// which would fall through to the `cursive` fallback (Snell Roundhand).
-const pacifico = Pacifico({
-  weight: "400",
-  subsets: ["latin"],
-  display: "swap",
-});
+// Preview font: Pacifico (thick script). Loaded via a direct Google Fonts
+// <link> in app/layout.tsx rather than next/font. iOS Safari was falling
+// through to the `cursive` fallback (Snell Roundhand) with both
+// `var(--font-script)` and with next/font's scoped className, so we
+// reference the plain family name here which iOS handles reliably.
 
 // ── 5-petal daisy SVG ──
 function Daisy({
@@ -116,8 +111,9 @@ export default function SweaterVisualPreview({
         style={{ paddingBottom: "10%" }}
       >
         <span
-          className={`${pacifico.className} relative block text-center transition-all duration-300 ease-out select-none px-4`}
+          className="relative block text-center transition-all duration-300 ease-out select-none px-4"
           style={{
+            fontFamily: "'Pacifico', cursive",
             fontWeight: 400,
             fontSize,
             lineHeight: 1.2,
