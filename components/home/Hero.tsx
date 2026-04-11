@@ -1,5 +1,5 @@
 import Link from "next/link";
-import HeroPreview from "./HeroPreview";
+import HeroPreviewInteractive from "./HeroPreviewInteractive";
 
 export default function Hero() {
   return (
@@ -9,7 +9,7 @@ export default function Hero() {
           {/* Copy: second on mobile (preview leads), first on desktop */}
           <div className="order-2 md:order-1">
             <p className="font-sans text-[10px] tracking-[0.22em] uppercase text-rose mb-4 font-medium">
-              New · Live Custom Designer
+              Custom Designer · Play with it
             </p>
             <h1 className="font-serif text-4xl md:text-5xl text-brown font-light leading-tight mb-5">
               Design it.<br className="hidden sm:block" /> Watch it come to life.
@@ -23,19 +23,18 @@ export default function Hero() {
               denim too. Everything hand-stitched in Spokane.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4">
-              <Link
-                href="/custom#order"
-                className="group inline-flex items-center gap-2 px-6 py-3 bg-rose text-warm-white font-sans text-sm font-medium rounded hover:bg-rose-dark transition-colors"
-              >
-                Try the live designer
-                <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-              </Link>
+            <div className="flex flex-wrap items-center gap-5">
               <Link
                 href="/custom#pricing"
                 className="font-sans text-sm text-brown hover:text-rose transition-colors underline underline-offset-4"
               >
                 See pricing
+              </Link>
+              <Link
+                href="/custom#items"
+                className="font-sans text-sm text-muted hover:text-rose transition-colors underline underline-offset-4"
+              >
+                What I can stitch
               </Link>
             </div>
 
@@ -45,8 +44,8 @@ export default function Hero() {
           </div>
 
           {/* Preview: first on mobile (immediately visible), second on desktop */}
-          <div className="order-1 md:order-2 bg-warm-white rounded-lg p-5 md:p-10 border border-border shadow-sm">
-            <HeroPreview />
+          <div className="order-1 md:order-2 bg-warm-white rounded-lg p-5 md:p-8 border border-border shadow-sm">
+            <HeroPreviewInteractive />
           </div>
         </div>
       </div>

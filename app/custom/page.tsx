@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import OrderForm from "@/components/custom/OrderForm";
-import InstagramPopup from "@/components/custom/InstagramPopup";
 
 export const metadata: Metadata = {
   title: "Custom Orders",
@@ -280,7 +279,6 @@ export default function CustomPage() {
         </div>
       </section>
 
-      <InstagramPopup />
     </>
   );
 }

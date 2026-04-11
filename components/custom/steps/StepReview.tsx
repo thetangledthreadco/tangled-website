@@ -124,7 +124,6 @@ export default function StepReview({ formData, onSubmit, onBack, submitting, sub
         <button
           onClick={onSubmit}
           disabled={submitting}
-          data-order-commit
           className="flex-1 px-6 py-3 rounded bg-rose text-warm-white font-sans font-medium text-sm hover:bg-rose-dark transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {submitting ? "Submitting..." : "Submit Order"}

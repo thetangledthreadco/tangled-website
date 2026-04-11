@@ -75,9 +75,20 @@ export default function OrderForm() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const didMountRef = useRef(false);
+  const didRestoreRef = useRef(false);
 
-  // Restore from localStorage on mount
+  // Restore from localStorage on mount. The homepage interactive preview
+  // writes directly into this same key before navigating here, so if a user
+  // came from the hero their seeded step + current-item fields are waiting
+  // in localStorage — no URL params, no separate seed path.
+  //
+  // The didRestoreRef guard is defensive against React 19 Strict Mode
+  // double-invoking the effect in dev: the async image-restore branch below
+  // sets state in a `.then()` after the effect has already returned, so a
+  // second synchronous run could land between setFormData and setRestored.
   useEffect(() => {
+    if (didRestoreRef.current) return;
+    didRestoreRef.current = true;
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (!stored) { setRestored(true); return; }
