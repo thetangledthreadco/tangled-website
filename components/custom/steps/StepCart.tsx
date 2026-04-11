@@ -116,6 +116,7 @@ export default function StepCart({ formData, onAddAnother, onPlaceOrder, onRemov
 
       <button
         onClick={onPlaceOrder}
+        data-order-commit
         className="w-full px-6 py-4 rounded bg-rose text-warm-white font-sans font-medium text-sm hover:bg-rose-dark transition-colors cursor-pointer"
       >
         Place order →
